@@ -21,13 +21,13 @@ const navBar = () => (
                   <a href="https://github.com/tabler/tabler" className="btn btn-sm btn-outline-primary">Source code</a>
                 </div>
                 */}
-                <div className="nav-item d-none d-md-flex">
+                <div className="nav-item  d-md-flex">
                   <Link className="btn btn-sm btn-outline-primary" to="/entrar" href="javascript:void(0)">Entrar</Link>
                 </div>
-                <div className="nav-item d-none d-md-flex">
+                <div className="nav-item  d-md-flex">
                   <Link className="btn btn-sm btn-outline-primary" to="/registro" href="javascript:void(0)">Registro</Link>
                 </div>
-                <div className="nav-item d-none d-md-flex">
+                <div className="nav-item  d-md-flex">
                   <Link className="btn btn-sm btn-outline-primary" to="/painel_empresa" href="javascript:void(0)">Painel Empresa</Link>
                 </div>
                 <div className="dropdown d-none d-md-flex">

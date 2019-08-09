@@ -2,7 +2,11 @@ import React from 'react';
 import axios from 'axios';
 import { Redirect } from 'react-router-dom';
 
-//import api from './../../../../services/api';
+import api from './../../../../../../../services/api';
+
+import DesenhoDoServidorConectado from './../DesenhoDoServidorConectado';
+import DesenhoDoServidorDesconectado from './../DesenhoDoServidorDesconectado';
+import { FindValueOperator } from 'rxjs/operators/find';
 
 export default function FormRegister() {
     const [values, setValues] = React.useState({
@@ -12,6 +16,16 @@ export default function FormRegister() {
         interface: '',
         login: '',
         senha: '',
+
+        servidorConectado: false,
+        informacoesServidor: {
+            "architecture-name": "",
+            "board-name": "",
+            "cpu": "",
+            "cpu-count": "",
+            "cpu-frequency": "",
+            "version": ""
+        },
 
         alertaRazaoSocial: false,
         alertaCNPJ: false,
@@ -25,12 +39,81 @@ export default function FormRegister() {
     });
 
     const handleChange = name => event => {
-        setValues({ ...values, [name]: event.target.value });
+        setValues({ ...values, [name]: event.target.value, servidorConectado: false });
     };
 
     const submitEmpresa = () =>  {
         console.log('SUBMIT');
     };
+
+    const testarConexao = () =>  {
+        const obj = {
+            ip: values.ipDoServidor,
+            porta: values.porta,
+            login: values.login,
+            senha: values.senha
+        };
+        if(values.informacoesServidor !== '' 
+            && values.porta !== '' 
+            && values.login !== ''
+            && values.senha !== ''
+            && values.servidorConectado === false ){
+                api.post('/servidor/recursos', obj)
+                .then(function (response) {
+                    console.log(response.data);
+                    if(response.data.status === 'success'){
+                        setValues({ 
+                            ...values, 
+                            servidorConectado: true,
+                            informacoesServidor: response.data
+                        });
+                        console.log(values.informacoesServidor);
+                    }
+                })
+                .catch(function (error) {
+                    console.log(error);
+                })
+            }
+    };
+
+    const renderDesenhoServidor = () => {
+        if (values.servidorConectado) {
+            return (
+                <DesenhoDoServidorConectado />
+            ) 
+        }else{
+            return (
+                <DesenhoDoServidorDesconectado />
+            ) 
+        }
+    }
+    const renderInformacoesServidor = () => {
+        if (values.servidorConectado) {
+            return (
+                <div className="informacoesServidor">
+                    <div className="alert alert-icon alert-success" role="alert">
+                        <i className="fe fe-check mr-2" aria-hidden="true"></i> Conectado com o servidor. 
+                    </div>
+                    <div className="alert alert-icon alert-primary" role="alert">
+                        <i className="fe fe-bell mr-2" aria-hidden="true"></i> 
+                       {`Arquitetura: ${values.informacoesServidor["architecture-name"]}  -  Placa: ${values.informacoesServidor["board-name"]}  -  Versão: ${values.informacoesServidor["version"]}`}
+                    </div>
+                    <div className="alert alert-icon alert-primary" role="alert">
+                        <i className="fe fe-bell mr-2" aria-hidden="true"></i>
+                        {`CPU: ${values.informacoesServidor["cpu"]}  -  ${values.informacoesServidor["cpu-count"]} Cores  -  ${values.informacoesServidor["cpu-frequency"]} MHz`}
+                    </div>
+                </div>
+            ) 
+        }else{
+            return (
+                <div className="informacoesServidor">
+                    <div className="alert alert-icon alert-warning" role="alert">
+                        <i className="fe fe-alert-triangle mr-2" aria-hidden="true"></i> Não conectado com o servidor 
+                    </div>
+                </div>
+            ) 
+        }
+    }
 
 
   return (
@@ -106,7 +189,15 @@ export default function FormRegister() {
 
         </div>
         <div className="col-sm-12 col-lg-6">
-            teste2
+            <div className="row">
+                {testarConexao()}
+                <div className="col-sm-4 col-lg-4">
+                    {renderDesenhoServidor()}
+                </div>
+                <div className="col-sm-8 col-lg-8">
+                    {renderInformacoesServidor()}
+                </div>
+            </div>
         </div>
     </div>
 
