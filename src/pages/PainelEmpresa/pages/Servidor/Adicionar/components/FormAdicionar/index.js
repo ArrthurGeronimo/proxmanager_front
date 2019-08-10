@@ -27,13 +27,9 @@ export default function FormRegister() {
             "version": ""
         },
 
-        alertaRazaoSocial: false,
-        alertaCNPJ: false,
-        alertaEmail: false,
-        alertaSenha: false,
-        alertaCategoria: 'primary',
-        alertaIcone: 'fe-alert-triangle',
-        alertaTexto: 'Teste de Texto',
+        errorNomeDoServidor: false,
+        errorTextNomeDoServidor: 'Coloque um nome no servidor',
+        successNomeDoServidor: false,
 
         redirect: false
     });
@@ -42,10 +38,49 @@ export default function FormRegister() {
         setValues({ ...values, [name]: event.target.value, servidorConectado: false });
     };
 
+    const pegarDadosLocalStorage = () => {
+        console.log('Pegando dados');
+        //console.log(usuario);
+    }
+    pegarDadosLocalStorage()
+
     const submitEmpresa = () =>  {
-        console.log('SUBMIT');
+        const obj = {
+           
+        };
+
+        if (obj.autenticacao.senha === '') {
+            setValues({
+                ...values,
+                errorRazaoSocial: false,
+                errorCnpj: false,
+                errorEmail: false,
+                errorSenha: true,
+                errorText: 'Senhas são importantes, sabia?'
+            });
+        }else{
+            api.post('/empresa', obj)
+            .then(function (response) {
+                console.log(response.data);
+                // TRATAR ERROS AQUI
+                if(response.data.status === 'success'){  
+                    setValues({
+                        ...values,
+                        errorRazaoSocial: false,
+                        errorCnpj: false,
+                        errorEmail: false,
+                        errorSenha: false,
+                        redirect: true
+                    });
+                }
+            })
+            .catch(function (error) {
+                console.log(error);
+            })
+        }
     };
 
+    // Testar Conexão
     const testarConexao = () =>  {
         const obj = {
             ip: values.ipDoServidor,
@@ -75,7 +110,7 @@ export default function FormRegister() {
                 })
             }
     };
-
+    //Mostrar Desenho
     const renderDesenhoServidor = () => {
         if (values.servidorConectado) {
             return (
@@ -87,6 +122,7 @@ export default function FormRegister() {
             ) 
         }
     }
+    //Mostrar Informações
     const renderInformacoesServidor = () => {
         if (values.servidorConectado) {
             return (
@@ -115,7 +151,6 @@ export default function FormRegister() {
         }
     }
 
-
   return (
     <div className="row row-cards">
         <div className="col-sm-12 col-lg-6">
@@ -138,6 +173,7 @@ export default function FormRegister() {
                     placeholder="Digite o IP do servidor (Ex. 192.168.0.1)"
                     value={values.ipDoServidor}
                     onChange={handleChange('ipDoServidor')}
+     
                 />
             </div>
             <div className="form-group">
