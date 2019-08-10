@@ -36,7 +36,7 @@ export default function App() {
       ...values,
       ultimoCaminho: 'location.pathname'
     });
-    console.log(location.pathname);
+    console.log(values.ultimoCaminho);
     /*
     if (window.sessionStorage.getItem('autenticacao') === 'true'){
       if(typeof window.sessionStorage.getItem('segredo') === 'undefined' || window.sessionStorage.getItem('segredo') === null ){

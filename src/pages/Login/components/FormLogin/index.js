@@ -2,8 +2,6 @@ import React, { useState, useContext } from 'react';
 import axios from 'axios';
 import { Redirect } from 'react-router-dom';
 
-import { UsersContext } from "./../../../../context";
-
 import api from './../../../../services/api';
 
 export default function FormRegister() {
@@ -19,8 +17,6 @@ export default function FormRegister() {
     const handleChange = name => event => {
         setValues({ ...values, [name]: event.target.value });
     };
-
-    const { setUsuario } = useContext(UsersContext);
 
     const fazerLogin = () =>  {
         console.log('LOGANDO...')
@@ -39,7 +35,8 @@ export default function FormRegister() {
             window.sessionStorage.setItem('autenticacao', "true");
             window.sessionStorage.setItem('token', response.data.token);
             window.sessionStorage.setItem('login', values.login);
-            setUsuario(response.data.empresa)
+            window.sessionStorage.setItem('segredo', response.data.empresa._id);
+            //setUsuario(response.data.empresa)
             //usuario = response.data.empresa;
             setValues({
                 ...values,

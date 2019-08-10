@@ -1,9 +1,8 @@
-import React from 'react';
+import React, { Component } from 'react'
 
-export const pageHome = ({ }) => {
-  return (
-    <div>
-      SITE
-    </div>
-  )
-};
+const pageHome = () => (
+  <div>
+      Home
+  </div>
+)
+export default pageHome

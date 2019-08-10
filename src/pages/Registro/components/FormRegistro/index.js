@@ -254,7 +254,7 @@ export default function FormRegister() {
         <div className="card-body p-6">
             <div className="card-title">Criando uma nova conta</div>
             <div className="form-group">
-                <label className="form-label">Razão Social<span class="form-required">*</span></label>
+                <label className="form-label">Razão Social<span className="form-required">*</span></label>
                 <input 
                     type="text" 
                     className={"form-control " + (values.errorRazaoSocial ? ' is-invalid ' : '') + (values.successRazaoSocial ? ' is-valid ' : '') + (values.razaoSocial.length > 0 ? ' is-valid ' : '')} 
@@ -266,7 +266,7 @@ export default function FormRegister() {
                 {renderFeedbackRazaoSocial()}
             </div>
             <div className="form-group">
-                <label className="form-label">CNPJ<span class="form-required">*</span></label>
+                <label className="form-label">CNPJ<span className="form-required">*</span></label>
                 <input 
                     type="text" 
                     className={"form-control " + (values.errorCnpj ? ' is-invalid ' : '') + (values.successCnpj ? ' is-valid ' : '')}  
@@ -277,7 +277,7 @@ export default function FormRegister() {
                 {renderFeedbackCnpj()}
             </div>
             <div className="form-group">
-                <label className="form-label">Email<span class="form-required">*</span></label>
+                <label className="form-label">Email<span className="form-required">*</span></label>
                 <input 
                     type="email" 
                     className={"form-control " + (values.errorEmail ? ' is-invalid ' : '') + (values.successEmail ? ' is-valid ' : '')}  
@@ -288,7 +288,7 @@ export default function FormRegister() {
                 {renderFeedbackEmail()}
             </div>
             <div className="form-group">
-                <label className="form-label">Senha<span class="form-required">*</span></label>
+                <label className="form-label">Senha<span className="form-required">*</span></label>
                 <input 
                     type="password" 
                     className={"form-control " + (values.errorSenha ? ' is-invalid ' : '') + (values.successSenha ? ' is-valid ' : '')}  
@@ -299,7 +299,7 @@ export default function FormRegister() {
                 />
             </div>
             <div className="form-group">
-                <label className="form-label">Confirme a sua senha<span class="form-required">*</span></label>
+                <label className="form-label">Confirme a sua senha<span className="form-required">*</span></label>
                 <input 
                     type="password" 
                     className={"form-control " + (values.errorSenha ? ' is-invalid ' : '') + (values.successSenha ? ' is-valid ' : '')}  
