@@ -1,0 +1,6 @@
+.logoCentral{
+    display: flex !important;
+}
+.logoCentral .header-brand{
+    margin: 0px auto !important;
+}

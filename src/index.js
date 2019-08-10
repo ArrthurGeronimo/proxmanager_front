@@ -8,28 +8,13 @@ import api from './services/api';
 
 import NavBar from './components/Navbar';
 
-import pageHome from './pages/Home';
+import {pageHome} from './pages/Home';
 import {pageLogin} from './pages/Login';
 import {pageRegistro} from './pages/Registro';
 import {pagePainelEmpresa} from './pages/PainelEmpresa';
 
 export default function App() {
-
-  const [values, setValues] = React.useState({
-    usuarioAutenticado: null,
-    usuarioLogado: 'USUARIO',
-    ultimoCaminho: ''
-  });
-
-  const VerificarAutenticacao = () => {
-    console.log('VERIFICANDO');
-    setValues({
-      ...values,
-      usuarioAutenticado: true,
-      usuarioLogado: 'response.data'
-    });
-  }
-
+/*
   history.listen((location) => {
     //${location.pathname}
     setValues({
@@ -37,7 +22,7 @@ export default function App() {
       ultimoCaminho: 'location.pathname'
     });
     console.log(location.pathname);
-    /*
+    
     if (window.sessionStorage.getItem('autenticacao') === 'true'){
       if(typeof window.sessionStorage.getItem('segredo') === 'undefined' || window.sessionStorage.getItem('segredo') === null ){
         //console.log('Não tem Segredo')
@@ -52,17 +37,16 @@ export default function App() {
     }else{
       //console.log('Não Autenticado')
     }
-    */
+    
 
     console.log('alterou')
     VerificarAutenticacao()
   
   });
-
+*/
   return(
     <Router history={history} >
       <div>
-        <NavBar usuarioAutenticado={values.usuarioAutenticado} usuarioLogado={values.usuarioLogado} />
         <Route exact path="/" component={pageHome} />
         <Route path="/entrar" component={pageLogin} />
         <Route path="/registro" component={pageRegistro} />

@@ -38,18 +38,17 @@ export default function FormRegister() {
         setValues({ ...values, [name]: event.target.value, servidorConectado: false });
     };
 
-    const pegarDadosLocalStorage = () => {
-        console.log('Pegando dados');
-        //console.log(usuario);
-    }
-    pegarDadosLocalStorage()
-
     const submitEmpresa = () =>  {
         const obj = {
-           
+           nome: values.nomeDoServidor,
+           ip: values.ipDoServidor,
+           porta: values.porta,
+           interface: values.interface,
+           login: values.login,
+           senha: values.senha
         };
 
-        if (obj.autenticacao.senha === '') {
+        if (obj.ip === '') {
             setValues({
                 ...values,
                 errorRazaoSocial: false,
@@ -59,20 +58,11 @@ export default function FormRegister() {
                 errorText: 'Senhas são importantes, sabia?'
             });
         }else{
-            api.post('/empresa', obj)
+            api.post(`/empresa/${window.localStorage.getItem('segredo')}/servidor`, obj)
             .then(function (response) {
                 console.log(response.data);
                 // TRATAR ERROS AQUI
-                if(response.data.status === 'success'){  
-                    setValues({
-                        ...values,
-                        errorRazaoSocial: false,
-                        errorCnpj: false,
-                        errorEmail: false,
-                        errorSenha: false,
-                        redirect: true
-                    });
-                }
+                
             })
             .catch(function (error) {
                 console.log(error);

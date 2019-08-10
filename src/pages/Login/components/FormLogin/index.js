@@ -30,12 +30,12 @@ export default function FormRegister() {
             }
         })
         .then(response => {
-            console.log('LOGOU: '+response)
-            console.log(response)
-            window.sessionStorage.setItem('autenticacao', "true");
-            window.sessionStorage.setItem('token', response.data.token);
-            window.sessionStorage.setItem('login', values.login);
-            window.sessionStorage.setItem('segredo', response.data.empresa._id);
+            //console.log('LOGOU: '+response)
+            //console.log(response)
+            window.localStorage.setItem('autenticacao', "true");
+            window.localStorage.setItem('token', response.data.token);
+            window.localStorage.setItem('login', values.login);
+            window.localStorage.setItem('segredo', response.data.empresa._id);
             //setUsuario(response.data.empresa)
             //usuario = response.data.empresa;
             setValues({

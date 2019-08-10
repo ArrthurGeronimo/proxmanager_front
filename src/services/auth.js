@@ -16,7 +16,7 @@ export default function withAuth(ComponentToProtect) {
 
     componentDidMount() {
       this._isMounted = true;
-      let tokenValue = window.sessionStorage.getItem('token');
+      let tokenValue = window.localStorage.getItem('token');
       const obj = {
         token: tokenValue
       };

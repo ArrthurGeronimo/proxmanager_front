@@ -3,9 +3,12 @@ import { Link } from "react-router-dom";
 
 import FormRegistro from './components/FormRegistro';
 
+import NavBarSimples from './../../components/Layout/NavBarSimples';
+
 export const pageRegistro = ({ }) => {
   return (
     <div className="page">
+      <NavBarSimples />
       <div className="page-single">
         <div className="container">
           <div className="row">

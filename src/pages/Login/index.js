@@ -1,10 +1,12 @@
 import React from 'react';
 
 import FormLogin from './components/FormLogin';
+import NavBarSimples from './../../components/Layout/NavBarSimples';
 
 export const pageLogin = ({ }) => {
   return (
     <div className="page">
+      <NavBarSimples />
       <div className="page-single">
         <div className="container">
           <div className="row">

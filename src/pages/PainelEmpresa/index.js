@@ -1,14 +1,30 @@
 import React from 'react';
 import { Link, Route, Redirect } from "react-router-dom";
 
-import NavBarEmpresa from './Components/NabBarEmpresa';
+import NavBarSistemaAutenticado from './../../components/Layout/NavBarAutenticado';
+import NavBarSistemaNaoAutenticado from './../../components/Layout/NavbarNaoAutenticado';
+//import NavBarEmpresa from './Components/NabBarEmpresa';
 
 import Inicio from './pages/Inicio';
 import ServidorAdicionar from './pages/Servidor/Adicionar';
+import ServidorGerenciar from './pages/Servidor/Gerenciar';
 
 export const pagePainelEmpresa = ({ match }) => {
+
+  const renderMenuSistema = () => {
+    if(window.localStorage.getItem('autenticacao') === 'true'){
+      return(
+        <NavBarSistemaAutenticado />
+      )
+    }else{
+      return(
+        <NavBarSistemaNaoAutenticado />
+      )
+    }
+  }
   return (
     <div>
+      {renderMenuSistema()}
       <div className="header collapse d-lg-flex p-0" id="headerMenuCollapse">
         <div className="container">
           <div className="row align-items-center">
@@ -90,6 +106,10 @@ const SubView = ({ match }) => {
   }else if(match.params.sectionName === 'adicionar_servidor'){
     return(
       <ServidorAdicionar />
+    )
+  }else if(match.params.sectionName === 'gerenciar_servidores'){
+    return(
+      <ServidorGerenciar />
     )
   }else{
     return(
