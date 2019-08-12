@@ -21,7 +21,7 @@ export const pageHome= () => {
   return(
     <div>
       {renderMenuSistema()}
-      <h3>SITE AQUI</h3>
+      <h3>HOME PAGE</h3>
     </div>
   )
 }
