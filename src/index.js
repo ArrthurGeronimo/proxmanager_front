@@ -4,9 +4,9 @@ import { Route, Router } from "react-router-dom";
 import history from './history';
 import withAuth from './services/auth';
 
-import api from './services/api';
+import './index.css';
 
-import NavBar from './components/Navbar';
+//import NavBar from './components/Navbar';
 
 import {pageHome} from './pages/Home';
 import {pageLogin} from './pages/Login';

@@ -6,8 +6,8 @@ import NavBarSistemaNaoAutenticado from './../../components/Layout/NavbarNaoAute
 //import NavBarEmpresa from './Components/NabBarEmpresa';
 
 import Inicio from './pages/Inicio';
-import ServidorAdicionar from './pages/Servidor/Adicionar';
-import ServidorGerenciar from './pages/Servidor/Gerenciar';
+import ServidorAdicionar from './pages/Servidor/pages/Adicionar';
+import ServidorGerenciar from './pages/Servidor/pages/Gerenciar';
 
 export const pagePainelEmpresa = ({ match }) => {
 
