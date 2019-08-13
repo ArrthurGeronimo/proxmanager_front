@@ -1,0 +1,17 @@
+.card-body-image{
+    background-color: red;
+    width: 40%;
+    height: 150px;
+    align-items: center;
+    align-content: center;
+    display: grid;
+}
+.card-body-informations{
+    background-color: blue;
+    width: 60%;
+    text-align: center;
+}
+.card-body{
+    padding: 5px;
+    display: flex;
+}

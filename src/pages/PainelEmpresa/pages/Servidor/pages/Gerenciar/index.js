@@ -1,7 +1,11 @@
 import React, { Component } from 'react';
 import { Link, Redirect } from "react-router-dom";
 
+import './style.css';
+
 import api from './../../../../../../services/api';
+import servidorDesligado from './../../../../../../assets/images/servidor_desligado.png';
+import servidorLigado from './../../../../../../assets/images/servidor_ligado.png';
 
 import ModalEdit from './components/ModalEdit';
 
@@ -61,8 +65,8 @@ export default class Elementos extends Component {
               </div>
               <div className="row">
                 
-                    {this.state.servidores.map((element, i) =>
-                    <div className="col-md-6 col-xl-4" key={i}>
+                    {this.state.servidores.map((element, i) => 
+                    <div className="col-md-4 col-xl-4" key={i}>
                         <div className="card" id={element._id}>
                             <div className={"card-status " + (element.nome === 'NOME' ? ' bg-red ' : ' bg-green ')}></div>
                             <div className="card-header">
@@ -72,8 +76,19 @@ export default class Elementos extends Component {
                             </div>
                             </div>
                             <div className="card-body">
-                                {element.ip} : {element.porta} : {element.login} : {element.senha}
-                                <span className={"badge "+(element.nome === 'NOME' ? ' badge-danger ' : ' badge-success ')}>{(element.nome === 'NOME' ? ' Desconectado ' : ' Sucesso ')}</span>
+                                <div className="card-body-image">
+                                    <img src={servidorDesligado} alt="servidor desligado" />
+                                    <span className={"badge "+(element.nome === 'NOME' ? ' badge-danger ' : ' badge-success ')}>{(element.nome === 'NOME' ? ' Desconectado ' : ' Sucesso ')}</span>
+                                </div>
+                                <div className="card-body-informations">
+                                    <small class="text-muted">{element.ip}</small>
+                                </div>
+                              
+
+
+                            {/*   {element.ip} : {element.porta} : {element.login} : {element.senha}
+                                <span className={"badge "+(element.nome === 'NOME' ? ' badge-danger ' : ' badge-success ')}>{(element.nome === 'NOME' ? ' Desconectado ' : ' Sucesso ')}</span> */}
+
                             </div>
                         </div>
                         </div>

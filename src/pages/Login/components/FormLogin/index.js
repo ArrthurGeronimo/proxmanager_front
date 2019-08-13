@@ -1,6 +1,6 @@
 import React, { useState, useContext } from 'react';
-import axios from 'axios';
 import { Redirect } from 'react-router-dom';
+import InputMask from 'react-input-mask';
 
 import api from './../../../../services/api';
 
@@ -10,12 +10,11 @@ export default function FormRegister() {
         cnpj: '',
         login: '',
         senha: '',
-
         redirect: false
     });
 
     const handleChange = name => event => {
-        setValues({ ...values, [name]: event.target.value });
+        setValues({ ...values, [name]: event.target.value, verificaInput: true });
     };
 
     const fazerLogin = () =>  {
@@ -64,11 +63,10 @@ export default function FormRegister() {
                 <div className="form-group">
                     <label className="form-label">Email ou CNPJ</label>
                     <input 
-                        type="email" 
                         className="form-control" 
                         placeholder="Digite seu email ou CNPJ"
                         value={values.login}
-                        onChange={handleChange('login')}
+                        onChange={handleChange('login')}            
                     />
                 </div>
                 <div className="form-group">
