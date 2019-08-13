@@ -8,34 +8,29 @@ import api from './../../../../../../../../services/api';
 import FormEdit from './../FormEdit';
 import ModalDelete from './../ModalDelete';
 
-export default class ModalEdit extends Component {
-  constructor(props) {
-    super(props);
-    this.state = { 
-      open: false,
+class ModalExampleSize extends Component {
+  state = { 
+    open: false,
 
-      idDoServidor: '',
-      nomeDoServidor: '',
-      ipDoServidor: '',
-      porta: '',
-      interface: '',
-      login: '',
-      senha: '',
+    idDoServidor: '',
+    nomeDoServidor: '',
+    ipDoServidor: '',
+    porta: '',
+    interface: '',
+    login: '',
+    senha: '',
 
-      servidorConectado: false,
+    servidorConectado: false,
 
-      informacoesServidor: {
-        "architecture-name": "",
-        "board-name": "",
-        "cpu": "",
-        "cpu-count": "",
-        "cpu-frequency": "",
-        "version": ""
-      }
+    informacoesServidor: {
+      "architecture-name": "",
+      "board-name": "",
+      "cpu": "",
+      "cpu-count": "",
+      "cpu-frequency": "",
+      "version": ""
     }
-
-    // Filho Manda Mensagem Para o Pai
-    this.PegandoMensagemDoComponenteFilho = this.PegandoMensagemDoComponenteFilho.bind(this, true);
+    
   }
 
 show = size => () => this.setState({ size, open: true })
@@ -55,22 +50,6 @@ componentDidMount() {
     login: this.props.servidor.login,
     senha: this.props.servidor.senha
   });
-}
-
-// Filho Manda Mensagem Para o Pai
-PegandoMensagemDoComponenteFilho(value) {
-  if(value === true){
-    this.setState({ open: false });
-    this.atualizouInformarcoesDoServidor(true);
-  }
-  if(value === false){
-    this.setState({ open: false });
-    this.atualizouInformarcoesDoServidor(false);
-  }
-}
-
-atualizouInformarcoesDoServidor = (value) => {
-  this.props.mandaDadosParaComponentePai(value);
 }
 
 // Testar Conexão
@@ -110,7 +89,9 @@ editarServidor = () =>  {
  }
 };
 
-
+atualizouInformarcoesDoServidor = () => {
+    this.props.mandaDadosParaComponentePai(true);
+}
 
   render() {
     const { open, size } = this.state
@@ -208,7 +189,7 @@ editarServidor = () =>  {
 
           </Modal.Content>
           <Modal.Actions>
-            <ModalDelete idDoServidor={this.state.idDoServidor} mandaDadosParaComponentePai={this.PegandoMensagemDoComponenteFilho} />
+            <ModalDelete idDoServidor={this.state.idDoServidor} />
             <button className="btn btn-secondary" onClick={this.close}>Cancelar</button>
             <button className="btn btn-green" onClick={this.editarServidor} style={{marginLeft: "20px"}}>Atualizar</button>
           </Modal.Actions>
@@ -217,3 +198,5 @@ editarServidor = () =>  {
     )
   }
 }
+
+export default ModalExampleSize

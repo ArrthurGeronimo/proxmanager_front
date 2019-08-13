@@ -4,25 +4,26 @@ import { Link, Redirect } from "react-router-dom";
 import './style.css';
 
 import api from './../../../../../../services/api';
-import servidorDesligado from './../../../../../../assets/images/servidor_desligado.png';
-import servidorLigado from './../../../../../../assets/images/servidor_ligado.png';
 
-import ModalEdit from './components/ModalEdit';
+import CardServidor from './components/CardServidor';
+
+
 
 export default class Elementos extends Component {
     constructor(props) {
         super(props);
         this.state = {
-          usuarioLogado: true,
-          informacoesUsuario: [],
+            isMounted: true,
+            usuarioLogado: true,
+            informacoesUsuario: [],
 
-          servidores: [],
+            servidores: [],
 
-          servidorSelecionado: '',
+            servidorSelecionado: '',
+            informacoesDoServidor: [],
 
-          data: "Default parent state",
-
-          logout: false
+            countRender: 1,
+            logout: false
         };
 
         // Filho Manda Mensagem Para o Pai
@@ -30,7 +31,15 @@ export default class Elementos extends Component {
     }
 
     componentDidMount() {
-        this.pegarServidoresDoBanco(); 
+        this.setState({ isMounted: true });
+
+        if (this.state.isMounted) {
+            this.pegarServidoresDoBanco(); 
+        }
+           
+    }
+    componentWillUnmount() {
+        this.setState({ isMounted: false});
     }
 
     pegarServidoresDoBanco = () =>  {
@@ -39,7 +48,6 @@ export default class Elementos extends Component {
             this.setState({
                 servidores: res.data.servidores
             });
-            console.log('API!!!')
         })
         .catch(function (error) {
             console.log(error);
@@ -49,10 +57,10 @@ export default class Elementos extends Component {
     // Filho Manda Mensagem Para o Pai
     SolicitarDadosDaApi(atualizarPaginaDoServidor) {
         if(atualizarPaginaDoServidor === true){
-            return this.pegarServidoresDoBanco();
+            this.pegarServidoresDoBanco();
+            this.render();
         }
     }
-
 
     render() {
         return (
@@ -66,36 +74,10 @@ export default class Elementos extends Component {
               <div className="row">
                 
                     {this.state.servidores.map((element, i) => 
-                    <div className="col-md-4 col-xl-4" key={i}>
-                        <div className="card" id={element._id}>
-                            <div className={"card-status " + (element.nome === 'NOME' ? ' bg-red ' : ' bg-green ')}></div>
-                            <div className="card-header">
-                            <h3 className="card-title">{element.nome}</h3>
-                            <div className="card-options">
-                                <ModalEdit servidor={element} mandaDadosParaComponentePai={this.SolicitarDadosDaApi} />
-                            </div>
-                            </div>
-                            <div className="card-body">
-                                <div className="card-body-image">
-                                    <img src={servidorDesligado} alt="servidor desligado" />
-                                    <span className={"badge "+(element.nome === 'NOME' ? ' badge-danger ' : ' badge-success ')}>{(element.nome === 'NOME' ? ' Desconectado ' : ' Sucesso ')}</span>
-                                </div>
-                                <div className="card-body-informations">
-                                    <small class="text-muted">{element.ip}</small>
-                                </div>
-                              
-
-
-                            {/*   {element.ip} : {element.porta} : {element.login} : {element.senha}
-                                <span className={"badge "+(element.nome === 'NOME' ? ' badge-danger ' : ' badge-success ')}>{(element.nome === 'NOME' ? ' Desconectado ' : ' Sucesso ')}</span> */}
-
-                            </div>
-                        </div>
-                        </div>
+                        <CardServidor key={i} servidor={element} mandaDadosParaComponentePai={this.SolicitarDadosDaApi} />
                     )}
                   
                 </div>
-              
             </div>
           </div>
         );
