@@ -1,0 +1,7 @@
+.invalid-feedback-custom-pageLogin{
+    display: block !important;
+    background-color: #cd201f;
+    color: #fff;
+    padding: 10px;
+    margin-bottom: 10px;
+}

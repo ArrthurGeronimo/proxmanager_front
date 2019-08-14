@@ -8,6 +8,8 @@ import NavBarSistemaNaoAutenticado from './../../components/Layout/NavbarNaoAute
 import Inicio from './pages/Inicio';
 import ServidorAdicionar from './pages/Servidor/pages/Adicionar';
 import ServidorGerenciar from './pages/Servidor/pages/Gerenciar';
+import PlanoAdicionar from './pages/Plano/pages/Adicionar';
+import PlanoGerenciar from './pages/Plano/pages/Gerenciar';
 
 export const pagePainelEmpresa = ({ match }) => {
 
@@ -52,14 +54,18 @@ export const pagePainelEmpresa = ({ match }) => {
                     <a href="#" className="dropdown-item ">Logs</a>
                   </div>
                 </li>
-                <li className="nav-item">
-                  <a href="#" className="nav-link"><i className="fe fe-image"></i> Planos</a>
+                <li className="nav-item dropdown">
+                  <a href="javascript:void(0)" className="nav-link" data-toggle="dropdown"><i className="fe fe-image"></i> Planos</a>
+                  <div className="dropdown-menu dropdown-menu-arrow">
+                    <Link to={`${match.url}/adicionar_plano`} className="dropdown-item">Adicionar Plano</Link>
+                    <Link to={`${match.url}/gerenciar_planos`} className="dropdown-item">Gerenciar Planos</Link>
+                  </div>
                 </li>
                 <li className="nav-item dropdown">
                   <a href="javascript:void(0)" className="nav-link" data-toggle="dropdown"><i className="fe fe-calendar"></i> Clientes</a>
                   <div className="dropdown-menu dropdown-menu-arrow">
                     <a href="#" className="dropdown-item ">Clientes</a>
-                    <a href="#" className="dropdown-item ">Planos</a>
+                    <Link to={`${match.url}/gerenciar_servidor`} className="dropdown-item">Planos</Link>
                     <a href="#" className="dropdown-item ">IP Pool</a>
                   </div>
                 </li>
@@ -111,6 +117,14 @@ const SubView = ({ match }) => {
     return(
       <ServidorGerenciar />
     )
+  }else if(match.params.sectionName === 'gerenciar_planos'){
+    return(
+      <PlanoGerenciar />
+    )
+  }else if(match.params.sectionName === 'adicionar_plano'){
+    return(
+      <PlanoAdicionar />
+    )
   }else{
     return(
       <div>
@@ -118,5 +132,4 @@ const SubView = ({ match }) => {
       </div>
     )
   }
-  
 };

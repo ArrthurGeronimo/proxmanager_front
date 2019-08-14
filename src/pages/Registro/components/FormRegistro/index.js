@@ -1,6 +1,9 @@
 import React from 'react';
 import axios from 'axios';
 import { Redirect } from 'react-router-dom';
+import validator from 'validator';
+import { isCNPJ, formatToCNPJ } from 'brazilian-values';
+import { cnpjMask } from './../../../../services/masks';
 
 import './style.css';
 
@@ -13,16 +16,6 @@ export default function FormRegister() {
         email: '',
         senha: '',
         inputConfirmaSenha: '',
-
-        alertaRazaoSocial: false,
-        alertaCNPJ: false,
-        alertaEmail: false,
-        alertaSenha: false,
-        alertaCategoria: 'primary',
-        alertaIcone: 'fe-alert-triangle',
-        alertaTexto: 'Teste de Texto',
-
-        
 
         errorCnpj: false,
         errorTextCnpj: 'CNPJ não pode ser vazio',
@@ -51,7 +44,11 @@ export default function FormRegister() {
     });
 
     const handleChange = name => event => {
-        setValues({ ...values, [name]: event.target.value });
+        if(name === 'cnpj'){
+            setValues({ ...values, [name]: cnpjMask(event.target.value) });
+        }else{
+            setValues({ ...values, [name]: event.target.value });
+        }
     };
 
     const submitEmpresa = () =>  {
@@ -159,6 +156,44 @@ export default function FormRegister() {
             ) 
         }
     }
+    const verificarCnpj = () => {
+        if(isCNPJ(values.cnpj)){
+            console.log('CNPJ Válido')
+            const obj = {
+                'dado.cnpj': values.cnpj 
+            };
+
+            api.post('/empresas/verificadisponibilidade', obj)
+            .then(function (response) {
+                if(response.data.status === 'success'){
+                    setValues({
+                        ...values,
+                        errorCnpj: false,
+                        successCnpj: true,
+                        errorTextCnpj: 'CNPJ válido'
+                    });
+                }
+                if(response.data.status === 'error'){
+                    setValues({
+                        ...values,
+                        errorCnpj: true,
+                        successCnpj: false,
+                        errorTextCnpj: 'CNPJ já cadastrado no sistema'
+                    });
+                }
+            })
+            .catch(function (error) {
+                console.log(error);
+            })
+        }else{
+            setValues({
+                ...values,
+                errorCnpj: true,
+                successCnpj: false,
+                errorTextCnpj: 'Insira um CNPJ válido'
+            });
+        }  
+    }
     // Verificação EMAIL
     const renderFeedbackEmail = () => {
         if (values.errorEmail) {
@@ -170,6 +205,43 @@ export default function FormRegister() {
                 <div className="valid-feedback">{values.successTextEmail}</div>
             )
         }
+    }
+    const verificarEmail = () => {
+        if(validator.isEmail(values.email)){
+            const obj = {
+                'dado.email': values.email 
+            };
+
+            api.post('/empresas/verificadisponibilidade', obj)
+            .then(function (response) {
+                if(response.data.status === 'success'){
+                    setValues({
+                        ...values,
+                        errorEmail: false,
+                        successEmail: true,
+                        errorTextEmail: 'Email válido'
+                    });
+                }
+                if(response.data.status === 'error'){
+                    setValues({
+                        ...values,
+                        errorEmail: true,
+                        successEmail: false,
+                        errorTextEmail: 'Email já cadastrado no sistema'
+                    });
+                }
+            })
+            .catch(function (error) {
+                console.log(error);
+            })
+        }else{
+            setValues({
+                ...values,
+                errorEmail: true,
+                successEmail: false,
+                errorTextEmail: 'Insira um email válido'
+            });
+        }  
     }
     // Verificação da SENHA
     const verificarCamposDeSenhas = () => {
@@ -273,6 +345,7 @@ export default function FormRegister() {
                     placeholder="Digite seu CNPJ"
                     value={values.cnpj}
                     onChange={handleChange('cnpj')}
+                    onBlur={verificarCnpj}
                 />
                 {renderFeedbackCnpj()}
             </div>
@@ -284,6 +357,7 @@ export default function FormRegister() {
                     placeholder="Digite seu email"
                     value={values.email}
                     onChange={handleChange('email')}
+                    onBlur={verificarEmail}
                 />
                 {renderFeedbackEmail()}
             </div>
