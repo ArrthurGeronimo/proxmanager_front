@@ -28,6 +28,12 @@ export default function withAuth(ComponentToProtect) {
               this.setState({ loading: false });
             }
           } else {
+            /*
+            window.sessionStorage.removeItem('login');
+            window.sessionStorage.removeItem('segredo');
+            window.sessionStorage.removeItem('autenticacao');
+            window.sessionStorage.removeItem('token');
+            */
             const error = new Error(res.error);
             throw error;
           }

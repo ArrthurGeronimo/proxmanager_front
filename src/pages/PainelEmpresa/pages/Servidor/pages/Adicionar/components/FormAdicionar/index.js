@@ -6,7 +6,11 @@ import api from './../../../../../../../../services/api';
 
 import DesenhoDoServidorConectado from './../../../../components/DesenhoDoServidorConectado';
 import DesenhoDoServidorDesconectado from './../../../../components/DesenhoDoServidorDesconectado';
+import ImagemServidorConectado from './../../../../../../../../assets/images/servidor_ligado.png';
+import ImagemServidorDesconectado from './../../../../../../../../assets/images/servidor_desligado.png';
 import { FindValueOperator } from 'rxjs/operators/find';
+
+import './style.css';
 
 export default function FormRegister() {
     const [values, setValues] = React.useState({
@@ -31,6 +35,12 @@ export default function FormRegister() {
         errorTextNomeDoServidor: 'Coloque um nome no servidor',
         successNomeDoServidor: false,
 
+        errorIpDoServidor: false,
+        errorTextIpDoServidor: 'Coloque um IP para o servidor',
+        successIpDoServidor: false,
+
+        avisoCerteza: false,
+
         redirect: false
     });
 
@@ -38,7 +48,7 @@ export default function FormRegister() {
         setValues({ ...values, [name]: event.target.value, servidorConectado: false });
     };
 
-    const submitEmpresa = () =>  {
+    const adicionarServidor = () =>  {
         const obj = {
            nome: values.nomeDoServidor,
            ip: values.ipDoServidor,
@@ -51,7 +61,7 @@ export default function FormRegister() {
         if (obj.ip === '') {
             setValues({
                 ...values,
-                errorRazaoSocial: false,
+                errorNomeDoServidor: false,
                 errorCnpj: false,
                 errorEmail: false,
                 errorSenha: true,
@@ -61,7 +71,10 @@ export default function FormRegister() {
             api.post(`/empresa/${window.localStorage.getItem('segredo')}/servidor`, obj)
             .then(function (response) {
                 console.log(response.data);
-                // TRATAR ERROS AQUI
+                setValues({
+                    ...values,
+                    redirect: true
+                });
                 
             })
             .catch(function (error) {
@@ -69,7 +82,78 @@ export default function FormRegister() {
             })
         }
     };
-
+// Verificação do NOME DO SERVIDOR
+const renderFeedbackNomeDoServidor = () => {
+    if (values.errorNomeDoServidor) {
+      return (
+        <div className="invalid-feedback">{values.errorTextNomeDoServidor}</div>
+      ) 
+    }
+}
+const trocouNomeDoServidor = () => {
+    if(values.nomeDoServidor.length > 0){
+        setValues({
+            ...values,
+            errormomeDoServidor: false,
+            successNomeDoServidor: true
+        });
+    }else if (values.nomeDoServidor === ''){
+        setValues({
+            ...values,
+            errorNomeDoServidor: true,
+            successNomeDoServidor: false,
+            errorTextNomeDoServidor: 'Seria interessante colocar um nome para o servidor'
+        });
+    }
+}
+// Verificação do IP DO SERVIDOR
+const renderFeedbackIpDoServidor = () => {
+    if (values.errorIpDoServidor) {
+      return (
+        <div className="invalid-feedback">{values.errorTextIpDoServidor}</div>
+      ) 
+    }
+}
+const trocouIpDoServidor = () => {
+    if(values.ipDoServidor.length > 0){
+        setValues({
+            ...values,
+            errorIpDoServidor: false,
+            successIpDoServidor: true
+        });
+    }else if (values.IpDoServidor === ''){
+        setValues({
+            ...values,
+            errorIpDoServidor: true,
+            successIpDoServidor: false,
+            errorTextIpDoServidor: 'Seria interessante colocar um IP para o servidor'
+        });
+    }
+}
+    // Certeza do cadastro sem conexão
+    const certezaQueQuerAdicionarServidor = () => {
+        setValues({ 
+            ...values, 
+            avisoCerteza: true
+        });
+    }
+    const renderAvisoDeCerteza =() => {
+        if(values.avisoCerteza){
+            return (
+                <div>
+                    <div className="alert alert-warning alert-warning" role="alert">
+                        <i className="fe fe-info mr-2" aria-hidden="true"></i>
+                        Não foi possível estabelecer conexão com o servidor.
+                     </div>
+                    <button className="btn btn-primary btn-block" onClick={adicionarServidor}>Estou ciente, quero cadastrar mesmo assim</button>
+                </div> 
+            )
+        }else{
+            return(
+                <button className="btn btn-primary btn-block" onClick={certezaQueQuerAdicionarServidor}>Criar servidor</button>
+            )
+        }
+    }
     // Testar Conexão
     const testarConexao = () =>  {
         const obj = {
@@ -90,6 +174,7 @@ export default function FormRegister() {
                         setValues({ 
                             ...values, 
                             servidorConectado: true,
+                            avisoCerteza: false,
                             informacoesServidor: response.data
                         });
                         console.log(values.informacoesServidor);
@@ -101,7 +186,7 @@ export default function FormRegister() {
             }
     };
     //Mostrar Desenho
-    const renderDesenhoServidor = () => {
+    const renderDesenhoServidorAntigo = () => {
         if (values.servidorConectado) {
             return (
                 <DesenhoDoServidorConectado />
@@ -109,6 +194,18 @@ export default function FormRegister() {
         }else{
             return (
                 <DesenhoDoServidorDesconectado />
+            ) 
+        }
+    }
+    //Mostrar Desenho
+    const renderDesenhoServidor = () => {
+        if (values.servidorConectado) {
+            return (
+                <img src={ImagemServidorConectado} alt="Servidor Conectado" />
+            ) 
+        }else{
+            return (
+                <img src={ImagemServidorDesconectado} alt="Servidor Desconectado" />
             ) 
         }
     }
@@ -121,12 +218,18 @@ export default function FormRegister() {
                         <i className="fe fe-check mr-2" aria-hidden="true"></i> Conectado com o servidor. 
                     </div>
                     <div className="alert alert-icon alert-primary" role="alert">
-                        <i className="fe fe-bell mr-2" aria-hidden="true"></i> 
-                       {`Arquitetura: ${values.informacoesServidor["architecture-name"]}  -  Placa: ${values.informacoesServidor["board-name"]}  -  Versão: ${values.informacoesServidor["version"]}`}
-                    </div>
-                    <div className="alert alert-icon alert-primary" role="alert">
-                        <i className="fe fe-bell mr-2" aria-hidden="true"></i>
-                        {`CPU: ${values.informacoesServidor["cpu"]}  -  ${values.informacoesServidor["cpu-count"]} Cores  -  ${values.informacoesServidor["cpu-frequency"]} MHz`}
+                        <i className="fe fe-info mr-2" aria-hidden="true"></i> 
+                        {`Arquitetura: ${values.informacoesServidor["architecture-name"]}`}
+                        <div className="dropdown-divider"></div>
+                        {`Placa: ${values.informacoesServidor["board-name"]}`}
+                        <div className="dropdown-divider"></div>
+                        {`Versão: ${values.informacoesServidor["version"]}`}
+                        <div className="dropdown-divider"></div>
+                        {`CPU: ${values.informacoesServidor["cpu"]}`}
+                        <div className="dropdown-divider"></div>
+                        {`${values.informacoesServidor["cpu-count"]} núcleos`}
+                        <div className="dropdown-divider"></div>
+                        {`${values.informacoesServidor["cpu-frequency"]} MHz`}
                     </div>
                 </div>
             ) 
@@ -140,31 +243,43 @@ export default function FormRegister() {
             ) 
         }
     }
+    // Redirecionamento para a página de GERENCIAR SERVIDORES
+    const renderRedirect = () => {
+        if (values.redirect) {
+          return <Redirect to={{
+            pathname: '/painel_empresa/gerenciar_servidores'
+          }} />
+        }
+    }
 
   return (
     <div className="row row-cards">
+        {renderRedirect()}
         <div className="col-sm-12 col-lg-6">
             
             <div className="form-group">
                 <label className="form-label">Nome do Servidor</label>
                 <input 
                     type="text" 
-                    className="form-control" 
+                    className={"form-control " + (values.errorNomeDoServidor ? ' is-invalid ' : '') + (values.successNomeDoServidor ? ' is-valid ' : '') + (values.nomeDoServidor.length > 0 ? ' is-valid ' : '')}  
                     placeholder="Digite o nome do servidor (Ex. Servidor Inicial)"
                     value={values.nomeDoServidor}
                     onChange={handleChange('nomeDoServidor')}
+                    onBlur={trocouNomeDoServidor}
                 />
+                {renderFeedbackNomeDoServidor()}
             </div>
             <div className="form-group">
                 <label className="form-label">IP do Servidor</label>
                 <input 
                     type="text" 
-                    className="form-control" 
+                    className={"form-control " + (values.errorIpDoServidor ? ' is-invalid ' : '') + (values.successIpDoServidor ? ' is-valid ' : '') + (values.ipDoServidor.length > 0 ? ' is-valid ' : '')}   
                     placeholder="Digite o IP do servidor (Ex. 192.168.0.1)"
                     value={values.ipDoServidor}
                     onChange={handleChange('ipDoServidor')}
-     
+                    onBlur={trocouIpDoServidor}
                 />
+                 {renderFeedbackIpDoServidor()}
             </div>
             <div className="form-group">
                 <label className="form-label">Porta</label>
@@ -209,15 +324,24 @@ export default function FormRegister() {
 
             <div className="form-group">
                 <div className="form-footer">
-                    <button className="btn btn-primary btn-block" onClick={submitEmpresa}>Criar servidor</button>
+
+                    {values.servidorConectado ?
+                        <button className="btn btn-primary btn-block" onClick={adicionarServidor}>Criar servidor</button>
+                    :
+                        <div>
+                            {renderAvisoDeCerteza()}
+                        </div>
+                        
+                    }
+
                 </div>
             </div>
 
         </div>
         <div className="col-sm-12 col-lg-6">
-            <div className="row">
+            <div className="row containerTestarConexaoPageAdicionarServidor">
                 {testarConexao()}
-                <div className="col-sm-4 col-lg-4">
+                <div className="col-sm-4 col-lg-4 containerDesenhoPageAdicionarServidor">
                     {renderDesenhoServidor()}
                 </div>
                 <div className="col-sm-8 col-lg-8">

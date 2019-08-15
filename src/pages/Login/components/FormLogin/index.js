@@ -16,7 +16,7 @@ export default function FormRegister() {
     });
 
     const handleChange = name => event => {
-        setValues({ ...values, [name]: event.target.value, verificaInput: true });
+        setValues({ ...values, [name]: event.target.value, errorLogin: false });
     };
 
     const fazerLogin = () =>  {

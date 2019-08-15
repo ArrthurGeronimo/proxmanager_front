@@ -2,3 +2,15 @@
     cursor: no-drop !important;
     opacity: 0.6;
 }
+.text-align-justify{
+    text-align: justify;
+}
+.text-align-right{
+    text-align: right;
+}
+.color-blue{
+    color: var(--blue);
+}
+.background-blue{
+    background-color: var(--blue);
+}

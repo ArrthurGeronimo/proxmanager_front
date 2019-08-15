@@ -18,3 +18,11 @@ export const cnpjMask = value => {
     .replace(/(-\d{2})\d+?$/, '$1') // captura 2 numeros seguidos de um traço e não deixa ser digitado mais nada
 }
 //  09.376.495/0001-22
+
+export const priceMask = value => {
+  return value
+  .replace(/\D/g, '')
+  .replace(/(\d+)(\d{2})/, '$1.$2')
+  }
+//  100.99
+// 10000.99

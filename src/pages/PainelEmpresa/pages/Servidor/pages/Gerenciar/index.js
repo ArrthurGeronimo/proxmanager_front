@@ -9,7 +9,7 @@ import CardServidor from './components/CardServidor';
 
 
 
-export default class Elementos extends Component {
+export default class GerenciarServidores extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -39,7 +39,7 @@ export default class Elementos extends Component {
            
     }
     componentWillUnmount() {
-        this.setState({ isMounted: false});
+        this.setState({ isMounted: false, countRender: this.state.countRender + 1 });
     }
 
     pegarServidoresDoBanco = () =>  {

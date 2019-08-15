@@ -1,0 +1,33 @@
+.containerFeedbackPlano{
+    text-align: center;
+}
+.cardFeedbackPlano{
+    width: 80%;
+    margin: 10px auto 0px;
+}
+.icone-rodando{
+    -webkit-animation: teste 2s infinite;
+    animation: teste 2s infinite;
+}
+
+@-webkit-keyframes teste {
+    0% {
+        -webkit-transform: rotate(0deg);
+                transform: rotate(0deg);
+    }
+    100% {
+        -webkit-transform: rotate(360deg);
+                transform: rotate(360deg);
+    }
+}
+  
+@keyframes teste {
+    0% {
+        -webkit-transform: rotate(0deg);
+                transform: rotate(0deg);
+    }
+    100% {
+        -webkit-transform: rotate(360deg);
+                transform: rotate(360deg);
+    }
+}
