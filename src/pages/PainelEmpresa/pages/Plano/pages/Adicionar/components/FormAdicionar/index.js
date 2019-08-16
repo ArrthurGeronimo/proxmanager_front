@@ -97,34 +97,36 @@ adicionarPlano = () =>  {
 };
 
 alternarServidor = (idDoServidor, index, nomeDoServidor) =>{
+    //var json = `{"_id":"${idDoServidor}", "nome":"${nomeDoServidor}"}`;
+    //var json = JSON.stringify({ _id: idDoServidor, nome: nomeDoServidor });
+    //console.log(json);
+    //let jsonServidores = JSON.parse(json);
+    //console.log(jsonServidores);
+    //let servidoresSelecionados = this.state.servidoresSelecionados;
+
+    var json = JSON.stringify({ _id: idDoServidor, nome: nomeDoServidor });
     let array = this.state.servidoresSelecionados;
     let found = array.find(function(element) {
-        return element === `{"_id":"${idDoServidor}", "nome":"${nomeDoServidor}"}`;
+        return element === json;
     });
-
+    
     if(found === undefined || found === 'undefined' ){
         // ADICIONA NO ARRAY DOS SERVIDORES
-        {/* 
         this.setState({
-            servidoresSelecionados: [...this.state.servidoresSelecionados, `{"_id":"${idDoServidor}", "nome":"${nomeDoServidor}"}`]
+            servidoresSelecionados: [...this.state.servidoresSelecionados, json]
         },() => {
-            let teste = this.state.servidoresSelecionados;
-            console.log(teste);
-            var json = `{"_id":"${idDoServidor}", "nome":"${nomeDoServidor}"}`;
-            let obj2 = JSON.parse(this.state.servidoresSelecionados);
-            console.log(obj2);
+            //console.log('Adicionou no Array');
         });
-        */}
     }else{
         // REMOVE DO ARRAY DOS SERVIDORES
         this.setState(function(prevState){
             return { servidoresSelecionados : prevState.servidoresSelecionados.filter(function(val, i) {
               return i !== index;
             })};
+        }, () => {
+            //console.log('Removeu do Array');
         });
     }
-
-   
 }
 
 renderContainerFeedbackPlano = () => {
@@ -140,9 +142,8 @@ renderContainerFeedbackPlano = () => {
                     elemento={this.state.plano}
                 />
 
-                {this.state.jsonServidoresSelecionados.map((element, i) => 
-                    
-                    console.log(element)
+                {this.state.servidoresSelecionados.map((element, i) => 
+                    this.renderCardCadastroServidor(element, i)
                 )}
 
             </div>
@@ -153,6 +154,18 @@ renderContainerFeedbackPlano = () => {
             </div>
         )
     }
+}
+
+renderCardCadastroServidor = (element, index) => {
+    return (
+        <CardProgresso 
+            key={index}
+            icone='fe-refresh-cw' 
+            animacaoIcone={true} 
+            categoria='SalvarNoServidor'
+            elemento={element}
+        />
+    )
 }
 
 render() {

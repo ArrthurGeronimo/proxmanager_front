@@ -28,18 +28,16 @@ export default function withAuth(ComponentToProtect) {
               this.setState({ loading: false });
             }
           } else {
-            /*
-            window.sessionStorage.removeItem('login');
-            window.sessionStorage.removeItem('segredo');
-            window.sessionStorage.removeItem('autenticacao');
-            window.sessionStorage.removeItem('token');
-            */
             const error = new Error(res.error);
             throw error;
           }
         })
         .catch(err => {
           //console.error(err);
+          window.localStorage.removeItem('login');
+          window.localStorage.removeItem('segredo');
+          window.localStorage.removeItem('autenticacao');
+          window.localStorage.removeItem('token');
           this.setState({ loading: false, redirect: true });
         });
     }
