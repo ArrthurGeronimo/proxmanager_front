@@ -5,6 +5,9 @@ import api from './../../../../../../../../services/api';
 import wifi from './../../../../../../../../assets/images/wifi.png';
 import servidorDesligado from './../../../../../../../../assets/images/servidor_desligado.png';
 import servidorLigado from './../../../../../../../../assets/images/servidor_ligado.png';
+import animacaServidorEntrando from './../../../../../../../../assets/images/animacao-servidor-entrando.gif';
+import animacaServidorConectado from './../../../../../../../../assets/images/animacao-servidor-conectado.gif';
+import animacaServidorDesconectado from './../../../../../../../../assets/images/animacao-servidor-desconectado.gif';
 import ModalEdit from './../../components/ModalEdit';
 
 export default class CardServidor extends Component {
@@ -307,9 +310,9 @@ export default class CardServidor extends Component {
               
                 <div className="card-body-image">
                   {this.state.conexaoEstabelecida ?
-                    <img src={servidorLigado} alt="servidor ligado" />
+                    <img src={animacaServidorConectado} alt="servidor ligado" />
                   :
-                    <img src={servidorDesligado} alt="servidor desligado" />
+                    <img src={animacaServidorDesconectado} alt="servidor desligado" />
                   }
                     <span className={"badge badgePageServidor "+(this.state.conexaoEstabelecida ? ' badge-success ' : ' badge-danger ')}>{(this.state.conexaoEstabelecida ? ' Conectado ' : ' Desconectado ')}</span>
                 </div>
