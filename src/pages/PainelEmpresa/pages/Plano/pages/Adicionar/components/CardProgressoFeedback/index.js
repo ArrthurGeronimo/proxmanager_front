@@ -7,7 +7,7 @@ export default class FeedbackPlano extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            isMounted: true,
+            isMounted: false,
 
             icone: '',
             animacaoIcone: true,
@@ -27,30 +27,31 @@ export default class FeedbackPlano extends Component {
     }
 
     componentDidMount() {
-        this.setState({ isMounted: true });
-
-        if (this.state.isMounted) {
-            this.setState({ 
-                isMounted: true,
-                icone: this.props.icone,
-                animacaoIcone: this.props.animacaoIcone ,
-            });
-
-            if(this.props.categoria === 'CriarPlano'){
+        this.setState({ isMounted: true }, () => {
+            if (this.state.isMounted) {
                 this.setState({ 
-                    plano: this.props.elemento
-                }, () => {
-                    this.criarPlano();
+                    isMounted: true,
+                    icone: this.props.icone,
+                    animacaoIcone: this.props.animacaoIcone ,
                 });
-            }else if(this.props.categoria === 'SalvarNoServidor'){
-                this.setState({ 
-                    servidor: this.props.elemento
-                }, () => {
-                    this.salvarNoServidor();
-                });
+    
+                if(this.props.categoria === 'CriarPlano'){
+                    this.setState({ 
+                        plano: this.props.elemento
+                    }, () => {
+                        this.criarPlano();
+                    });
+                }else if(this.props.categoria === 'SalvarNoServidor'){
+                    let formatoJson = JSON.parse(this.props.elemento);
+                    this.setState({ 
+                        servidor: formatoJson
+                    }, () => {
+                        this.salvarNoServidor();
+                        console.log(this.state.servidor)
+                    });
+                }
             }
-        }
-           
+        });     
     }
     componentWillUnmount() {
         this.setState({ isMounted: false});

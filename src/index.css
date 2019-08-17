@@ -14,3 +14,36 @@
 .background-blue{
     background-color: var(--blue);
 }
+.feedback-simple{
+    display: block;
+    width: 100%;
+    margin-top: 0.25rem;
+    font-size: 87.5%;
+    color: var(--primary);
+}
+.feedback-simple span{
+    color: var(--dark);
+}
+
+.buttonInside{
+    position:relative;
+    margin-bottom:10px;
+  }
+.botaoDentroDoInput{
+    position: absolute;
+    right: 0px;
+    bottom: 0px;
+    border: none;
+    height: 20px;
+    width: 130px;
+    outline: none;
+    text-align: center;
+    font-weight: bold;
+    padding: 0px;
+}
+.botaoDentroDoInput:hover{
+cursor:pointer;
+}
+.height23{
+    height: 23px;
+}

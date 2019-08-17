@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { Link, Redirect } from "react-router-dom";
+import TabelaComponente from './components/TabelaPlanos';
 
 import './style.css';
 
@@ -57,7 +58,7 @@ export default class Elementos extends Component {
                 </div>
                 <div className="row">
                 
-                <p>LISTAR PLANOS AQUI</p>
+                <TabelaComponente />
                   
                 </div>
             </div>

@@ -5,7 +5,7 @@ import api from './../../../../services/api';
 
 import './style.css';
 
-export default function FormRegister() {
+export default function FormLogin() {
     const [values, setValues] = React.useState({
         login: '',
         senha: '',

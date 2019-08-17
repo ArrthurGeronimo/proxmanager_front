@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import axios from 'axios';
 import { Redirect } from 'react-router-dom';
-import { priceMask } from './../../../../../../../../services/masks';
+import { priceMask, slugMask } from './../../../../../../../../services/masks';
+import { Popup } from 'semantic-ui-react';
 
 import './style.css';
 
@@ -20,9 +21,12 @@ export default class AdicionarPlano extends Component {
             isMounted: true,
 
             nomeDoPlano: '',
+            slug: '',
+            slugSugerido: '',
             preco: '',
             download: '',
             upload: '',
+
 
             pppoe: true,
 
@@ -38,6 +42,8 @@ export default class AdicionarPlano extends Component {
 handleChange = name => event => {
     if(name === 'preco'){
         this.setState({ [name]: priceMask(event.target.value) });
+    }else if(name === 'nomeDoPlano'){
+        this.setState({ [name]: event.target.value , slug: slugMask(event.target.value), slugSugerido: slugMask(event.target.value) });
     }else{
         this.setState({ [name]: event.target.value });
     }
@@ -168,6 +174,27 @@ renderCardCadastroServidor = (element, index) => {
     )
 }
 
+renderSlugSugerida = () => {
+    if(this.state.nomeDoPlano.length > 1){
+        return(
+            <div>
+                <div className="feedback-simple"><span>Nome sugerido: </span>{this.state.slugSugerido}</div>
+                <button className="btn btn-primary btn-block botaoDentroDoInput" onClick={() => {this.usarNomeSugerido()}}>Usar nome sugerido</button>
+            </div>
+        )
+    }else{
+        return(
+            <div className="height23"></div>
+        )
+    }
+}
+
+usarNomeSugerido = () => {
+    this.setState({
+        slug: this.state.slugSugerido
+    });
+}
+
 render() {
 
   return (
@@ -183,6 +210,24 @@ render() {
                     value={this.state.nomeDoPlano}
                     onChange={this.handleChange('nomeDoPlano')}
                 />
+            </div>
+            <div className="form-group buttonInside">
+                <label className="form-label">Nome no Mikrotik</label>
+                <Popup
+                    header='Nome no Mikrotik'
+                    content={'O nome deverá ser único e não poderá ter espaços e nem caracteres especiais'}
+                    on='focus'
+                    trigger={
+                        <input 
+                            type="text" 
+                            className="form-control" 
+                            placeholder={"Digite o nome que será salvo no Mikrotik (Ex. " + this.state.slugSugerido + " )"}
+                            value={this.state.slug}
+                            onChange={this.handleChange('slug')}
+                        />
+                    }
+                />
+               {this.renderSlugSugerida()}
             </div>
             <div className="form-group">
                 <label className="form-label">Preço do Plano</label>
