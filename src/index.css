@@ -47,3 +47,7 @@ cursor:pointer;
 .height23{
     height: 23px;
 }
+/* BOTÃO FILTRO DA TABELA */
+.ag-theme-balham .ag-ltr .ag-floating-filter-button {
+    display: none;
+}

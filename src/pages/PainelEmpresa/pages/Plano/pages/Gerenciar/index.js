@@ -36,7 +36,18 @@ export default class Elementos extends Component {
     }
 
     pegarPlanosDoBanco = () =>  {
-        //
+        api.get(`/empresa/${window.localStorage.getItem('segredo')}/servidores`)
+        .then(res => {
+            this.setState({
+                planos: res.data.servidores
+            }, () => {
+                console.log('CHAMOU A API: ')
+                console.log(this.state.planos)
+            });
+        })
+        .catch(function (error) {
+            console.log(error);
+        })
     };
 
     // Filho Manda Mensagem Para o Pai
@@ -53,13 +64,13 @@ export default class Elementos extends Component {
             <div className="container">
                 <div className="page-header">
                     <h1 className="page-title">
-                    Planos
+                        Planos
                     </h1>
                 </div>
                 <div className="row">
-                
-                <TabelaComponente />
-                  
+                    <div className="col-sm-12 col-lg-12">
+                        <TabelaComponente planos={this.state.planos} />
+                    </div>
                 </div>
             </div>
           </div>

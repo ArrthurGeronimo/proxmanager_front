@@ -46,5 +46,11 @@
   <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>
     <div id="root"></div>
+
+    <script>
+      require(['datatables', 'jquery'], function(datatable, $) {
+            $('.datatable').DataTable()
+          });
+    </script>
   </body>
 </html>
