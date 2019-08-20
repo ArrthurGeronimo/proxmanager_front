@@ -51,3 +51,6 @@ cursor:pointer;
 .ag-theme-balham .ag-ltr .ag-floating-filter-button {
     display: none;
 }
+.btn-disable{
+    position: no-drop !important;
+}

@@ -111,7 +111,8 @@ export default class CardServidor extends Component {
       }else{
         this.setState({ 
           ...this.state,
-          aparecerConteudo: true
+          aparecerConteudo: true,
+          conexaoEstabelecida: false
         });
       }
     })
@@ -260,7 +261,7 @@ export default class CardServidor extends Component {
             <small className="text-muted"> Senha: </small>
             <span className="spanPageServidor"> {this.state.senha}</span>
           </div>
-      </div>
+        </div>
       )
     }else{
       return (

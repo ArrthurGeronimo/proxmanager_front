@@ -98,7 +98,11 @@ export default function FormRegister() {
                 errorSenha: true,
                 errorText: 'Senhas são importantes, sabia?'
             });
-        }else{
+        }else if(values.successCnpj === true &&
+                values.successEmail === true &&
+                values.successRazaoSocial === true &&
+                values.successSenha === true &&
+                values.aceitouTermos === true){
             api.post('/empresa', obj)
             .then(function (response) {
                 console.log(response.data);
@@ -245,21 +249,22 @@ export default function FormRegister() {
     }
     // Verificação da SENHA
     const verificarCamposDeSenhas = () => {
-        console.log('VERIFICANDO');
-        if(values.inputConfirmaSenha === values.senha){
-            setValues({
-                ...values,
-                errorSenha: false,
-                successSenha: true,
-                successTextSenha: 'As senhas conferem'
-            });
-        }else{
-            setValues({
-                ...values,
-                errorSenha: true,
-                successSenha: false,
-                errorTextSenha: 'As senhas não são iguais'
-            });
+        if(values.senha.length > 1 && values.inputConfirmaSenha.length > 1){
+            if(values.inputConfirmaSenha === values.senha){
+                setValues({
+                    ...values,
+                    errorSenha: false,
+                    successSenha: true,
+                    successTextSenha: 'As senhas conferem'
+                });
+            }else{
+                setValues({
+                    ...values,
+                    errorSenha: true,
+                    successSenha: false,
+                    errorTextSenha: 'As senhas não são iguais'
+                });
+            }
         }
     }
     const trocouSenha = () => {

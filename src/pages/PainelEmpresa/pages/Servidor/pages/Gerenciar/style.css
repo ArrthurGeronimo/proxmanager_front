@@ -65,3 +65,11 @@
 .spanPageServidorRed{
     color: #cd201f;
 }
+
+.page-gerenciar-servidores .btn-pesquisar{
+    margin-left: 15px;
+    width: 40px;
+}
+.page-gerenciar-servidores .btn-pesquisar span{
+    font-size: 12pt;
+}

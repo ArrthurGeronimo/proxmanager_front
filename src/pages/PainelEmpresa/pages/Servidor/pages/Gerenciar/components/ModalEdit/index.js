@@ -118,7 +118,7 @@ editarServidor = () =>  {
     return (
       <div>
         <a className="card-options-collapse" href="javascript:void(0)" onClick={this.show('fullscreen')}>
-            <i className="fe fe-edit"></i>
+          <i className="fe fe-edit"></i>
         </a>
 
         <Modal size={size} open={open} onClose={this.close}>
