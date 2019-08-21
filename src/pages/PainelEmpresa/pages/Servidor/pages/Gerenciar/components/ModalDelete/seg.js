@@ -5,7 +5,7 @@ import './style.css';
 
 import api from './../../../../../../../../services/api';
 
-export default class ModalDeleteServidor extends Component {
+class ModalExampleCloseConfig extends Component {
   state = {
     isMounted: false,
 
@@ -13,7 +13,7 @@ export default class ModalDeleteServidor extends Component {
     idDoServidor: '',
     inputDelete: '' 
   }
-
+  
   handleChange = name => event => {
     this.setState({ ...this.state, [name]: event.target.value });
   };
@@ -21,6 +21,7 @@ export default class ModalDeleteServidor extends Component {
   closeConfigShow = (closeOnEscape, closeOnDimmerClick) => () => {
     this.setState({ closeOnEscape, closeOnDimmerClick, open: true })
   }
+
   close = () => this.setState({ open: false })
 
   componentDidMount() {
@@ -39,24 +40,28 @@ export default class ModalDeleteServidor extends Component {
   apagarServidor = () => {
     api.delete(`/empresa/${window.localStorage.getItem('segredo')}/servidor/${this.state.idDoServidor}`)
     .then(res => {
-      if(res.data.status === 'success'){
-        this.setState({ open: false })
-        this.props.mandaDadosParaComponentePai(true);
-      }
+      this.setState({ open: false })
+      this.avisarModalEditQueApagouServidor();
     })
     .catch(function (error) {
         console.log(error);
     })
   }
 
+  avisarModalEditQueApagouServidor = () => {
+    this.props.mandaDadosParaComponentePai(true);
+  }
+
   render() {
+    const { open, closeOnEscape, closeOnDimmerClick } = this.state
+
     return (
       <div>
         <button className="btn btn-red btn-delete" onClick={this.closeConfigShow(true, false)}>Deletar Servidor</button>
         <Modal
-          open={this.state.open}
-          closeOnEscape={this.state.closeOnEscape}
-          closeOnDimmerClick={this.state.closeOnDimmerClick}
+          open={open}
+          closeOnEscape={closeOnEscape}
+          closeOnDimmerClick={closeOnDimmerClick}
           onClose={this.close}
         >
           <Modal.Header>Deletando o Servidor</Modal.Header>
@@ -83,3 +88,5 @@ export default class ModalDeleteServidor extends Component {
     )
   }
 }
+
+export default ModalExampleCloseConfig

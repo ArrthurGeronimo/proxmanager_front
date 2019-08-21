@@ -54,3 +54,82 @@ cursor:pointer;
 .btn-disable{
     position: no-drop !important;
 }
+/* BOTÃO ALTERNAR VISUALIZAÇAO */
+.btn-alternar-visualizacao{
+    margin-left: 10px;
+    width: 40px;
+    border: 1px solid var(--primary);
+}
+.btn-alternar-visualizacao span{
+    font-size: 12pt;
+    color: var(--primary);
+}
+.btn-alternar-visualizacao-active{
+    margin-left: 10px;
+    width: 40px;
+    border: 1px solid var(--primary);
+    background-color: var(--primary);
+}
+.btn-alternar-visualizacao-active span{
+    font-size: 12pt;
+    color: var(--white);
+}
+.elementoDesaparece{
+    display: none;
+}
+.elementoAparece{
+    -webkit-animation: fadeInFromNone 0.5s ease-out;
+    -moz-animation: fadeInFromNone 0.5s ease-out;
+    -o-animation: fadeInFromNone 0.5s ease-out;
+    animation: fadeInFromNone 0.5s ease-out;
+}
+
+/* APARECE */
+@-webkit-keyframes fadeInFromNone {
+    0% {
+        display: none;
+        opacity: 0;
+    }
+    1% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
+}
+@-moz-keyframes fadeInFromNone {
+    0% {
+        display: none;
+        opacity: 0;
+    }
+    1% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
+}
+@-o-keyframes fadeInFromNone {
+    0% {
+        display: none;
+        opacity: 0;
+    }
+    1% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
+}
+@keyframes fadeInFromNone {
+    0% {
+        display: none;
+        opacity: 0;
+    }
+    1% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
+}

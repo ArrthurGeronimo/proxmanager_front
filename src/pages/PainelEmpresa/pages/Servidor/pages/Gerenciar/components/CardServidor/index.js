@@ -3,9 +3,6 @@ import { Popup } from 'semantic-ui-react'
 
 import api from './../../../../../../../../services/api';
 import wifi from './../../../../../../../../assets/images/wifi.png';
-import servidorDesligado from './../../../../../../../../assets/images/servidor_desligado.png';
-import servidorLigado from './../../../../../../../../assets/images/servidor_ligado.png';
-import animacaServidorEntrando from './../../../../../../../../assets/images/animacao-servidor-entrando.gif';
 import animacaServidorConectado from './../../../../../../../../assets/images/animacao-servidor-conectado.gif';
 import animacaServidorDesconectado from './../../../../../../../../assets/images/animacao-servidor-desconectado.gif';
 import ModalEdit from './../../components/ModalEdit';
@@ -15,61 +12,30 @@ export default class CardServidor extends Component {
     super(props);
     this.state = { 
       isMounted: false,
+
       informacoesDoServidor: [],
       conexaoEstabelecida: false,
-      aparecerConteudo: false,
-      
-      id: '',
-      ip: '',
-      porta: '',
-      login: '',
-      senha: ''
+      aparecerConteudo: false
     }
-
     // Filho Manda Mensagem Para o Pai
     this.PegandoMensagemDoComponenteFilho = this.PegandoMensagemDoComponenteFilho.bind(this, true);
   }
 
   componentDidMount() {
     this.setState({ isMounted: true }, () => {
-      if (this.state.isMounted) {
-        this.setState({ 
-          conexaoEstabelecida: false,
-          informacoesDoServidor: [],
-          aparecerConteudo: false,
-          
-          id: '',
-          ip: '',
-          porta: '',
-          login: '',
-          senha: ''
-        }, () => {
-          this.testarConexao();
-          this.render();
-        });
-      }
+      this.testarConexao();
     });
   }
-
   componentWillUnmount() {
-    this.setState({ 
-      isMounted: false,
-      conexaoEstabelecida: false,
-      informacoesDoServidor: [],
-      aparecerConteudo: false,
-      id: '',
-      ip: '',
-      porta: '',
-      login: '',
-      senha: ''
-    });
+    this.setState({ isMounted: false });
   }
 
    // Filho Manda Mensagem Para o Pai
-   PegandoMensagemDoComponenteFilho(atualizarPaginaDoServidor) {
-    if(atualizarPaginaDoServidor === true){
-      this.atualizarCardDoServidor();
-      this.testarConexao();
+   PegandoMensagemDoComponenteFilho(value) {
+    if(value === true){
+      console.log('CardServidor: RECEBEU MENSAGEM')
+      //this.atualizarCardDoServidor();
+      //this.testarConexao();
     }
   }
 
@@ -78,6 +44,12 @@ export default class CardServidor extends Component {
   }
 
   testarConexao = () =>  {
+    this.setState({ 
+      ...this.state,
+      conexaoEstabelecida: false,
+      aparecerConteudo: false
+    });
+
     const obj = {
       ip: this.props.servidor.ip,
       porta: this.props.servidor.porta,
@@ -85,18 +57,6 @@ export default class CardServidor extends Component {
       senha: this.props.servidor.senha
     };
 
-    this.setState({ 
-      ...this.state,
-      informacoesDoServidor: [],
-      conexaoEstabelecida: false,
-      aparecerConteudo: false,
-      id: this.props.servidor._id,
-      ip: this.props.servidor.ip,
-      porta: this.props.servidor.porta,
-      login: this.props.servidor.login,
-      senha: this.props.servidor.senha
-    });
-    
     api.post('/servidor/recursos', obj)
     .then(res => {
       if(res.data.status === 'success'){
@@ -105,8 +65,6 @@ export default class CardServidor extends Component {
           informacoesDoServidor: res.data,
           conexaoEstabelecida: true,
           aparecerConteudo: true
-        }, () => {
-          console.log(this.state.informacoesDoServidor)
         });
       }else{
         this.setState({ 
@@ -124,11 +82,10 @@ export default class CardServidor extends Component {
   renderConexaoEstabelecidade = () => {
     let hdTotal = this.readableBytes(this.state.informacoesDoServidor['total-hdd-space']);
     let hdUsado = this.state.informacoesDoServidor['total-hdd-space'] - this.state.informacoesDoServidor['free-hdd-space'];
-
     let memoriaTotal = this.readableBytes(this.state.informacoesDoServidor['total-memory']);
     let memoriaUsada = this.state.informacoesDoServidor['total-memory'] - this.state.informacoesDoServidor['free-memory'];
-
     let pppoeOffline = this.state.informacoesDoServidor['pppoe-total'] - this.state.informacoesDoServidor['pppoe-online'];
+    
     if(this.state.aparecerConteudo){
       return (
         <div className="card-body-informations">
@@ -244,22 +201,22 @@ export default class CardServidor extends Component {
           <div>
             <i className="fe fe-server iconeCardServidor"></i>
             <small className="text-muted"> IP: </small>
-            <span className="spanPageServidor"> {this.state.ip}</span>
+            <span className="spanPageServidor"> {this.props.servidor.ip}</span>
           </div>
           <div>
             <i className="fe fe-zap iconeCardServidor"></i>
             <small className="text-muted"> Porta: </small>
-            <span className="spanPageServidor"> {this.state.porta}</span>
+            <span className="spanPageServidor"> {this.props.servidor.porta}</span>
           </div>
           <div>
             <i className="fe fe-lock iconeCardServidor"></i>
             <small className="text-muted"> Login: </small>
-            <span className="spanPageServidor"> {this.state.login}</span>
+            <span className="spanPageServidor"> {this.props.servidor.login}</span>
           </div>
           <div>
             <i className="fe fe-shield iconeCardServidor"></i>
             <small className="text-muted"> Senha: </small>
-            <span className="spanPageServidor"> {this.state.senha}</span>
+            <span className="spanPageServidor"> {this.props.servidor.senha}</span>
           </div>
         </div>
       )
@@ -279,14 +236,13 @@ export default class CardServidor extends Component {
     let bytes = Math.max(num, 0);
     let pow = Math.floor((bytes ? Math.log (bytes) : 0 ) / Math.log(1024));
     pow = Math.min(pow, units.length - 1);
-
     bytes /= Math.pow(1024, pow);
     return Math.round(bytes * 100)/100 + ' ' + units[pow];
   }
 
   render() {
     return (
-      <div className="col-md-4 col-xl-4" key={this.state._id}>
+      <div id={'cardServidor_'+this.props.servidor._id} className="col-md-4 col-xl-4" key={this.state._id}>
         <div className="card cardServidor" id={this.props.servidor._id}>
             <div className={"card-status " + (this.state.conexaoEstabelecida ? ' bg-green ' : ' bg-red ')}></div>
             <div className="card-header">
@@ -318,13 +274,13 @@ export default class CardServidor extends Component {
                     <span className={"badge badgePageServidor "+(this.state.conexaoEstabelecida ? ' badge-success ' : ' badge-danger ')}>{(this.state.conexaoEstabelecida ? ' Conectado ' : ' Desconectado ')}</span>
                 </div>
 
-                  {this.state.conexaoEstabelecida ? 
-                  /* CONEXÃO ESTABELECIDA */
-                    this.renderConexaoEstabelecidade()
-                  :
-                  /* CONEXÃO NÃO ESTABELECIDA */
-                    this.renderConexaoNaoEstabelecidade()
-                  }
+                {this.state.conexaoEstabelecida ? 
+                /* CONEXÃO ESTABELECIDA */
+                  this.renderConexaoEstabelecidade()
+                :
+                /* CONEXÃO NÃO ESTABELECIDA */
+                  this.renderConexaoNaoEstabelecidade()
+                }
 
             </div>
         </div>

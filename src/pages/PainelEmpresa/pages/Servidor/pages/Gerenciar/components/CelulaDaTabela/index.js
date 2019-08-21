@@ -192,7 +192,7 @@ readableBytes(num) {
             let memoriaUsada = this.state.informacoesDoServidor['total-memory'] - this.state.informacoesDoServidor['free-memory'];
             let pppoeOffline = this.state.informacoesDoServidor['pppoe-total'] - this.state.informacoesDoServidor['pppoe-online'];
             return (
-                <tr key={this.props.servidor._id} className='celula-servidor-conectado'>
+                <tr id={'linhaDaTabela'+this.props.servidor._id} key={this.props.servidor._id} className='celula-servidor-conectado'>
                     <td className='td-table-servidor-conexao'>
                         <img src={animacaServidorConectado} alt="Ícone Wifi" />
                         <span className={"badge badgePageServidor badge-success"}>Conectado</span>
@@ -394,7 +394,7 @@ readableBytes(num) {
             );
         }else{
             return (
-                <tr key={this.props.servidor._id} className='celula-servidor-desconectado'>
+                <tr id={'linhaDaTabela'+this.props.servidor._id} key={this.props.servidor._id} className='celula-servidor-desconectado'>
                     <td className='td-table-servidor-conexao'>
                         <img src={animacaServidorDesconectado} alt="Ícone Wifi" />
                         <span className={"badge badgePageServidor badge-danger"}>Desconectado</span>
@@ -437,7 +437,7 @@ readableBytes(num) {
         }
     }else{
         return (
-            <tr key={this.props.servidor._id} className="td-table-servidor-conectando">
+            <tr id={'linhaDaTabela'+this.props.servidor._id} key={this.props.servidor._id} className="td-table-servidor-conectando">
                 <td>
                     <img src={wifi} alt="Ícone Wifi" />
                 </td>

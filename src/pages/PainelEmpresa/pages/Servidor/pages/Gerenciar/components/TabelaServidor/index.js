@@ -11,6 +11,28 @@ export default class TabelaServidor extends React.Component {
     };
   }
 
+filtrarServidores = () => {
+    //let jsonServidores = this.state.servidores;
+    //console.log(this.props.servidores)
+    for(let i=0; i < this.props.servidores.length; i++){
+        let toString = JSON.stringify(this.props.servidores[i]).toLowerCase();
+        let inputPesquisa = (this.props.filtro.toLowerCase());
+        let verificaSeTem = toString.includes(inputPesquisa);
+        let linhaDaTabela = document.getElementById('linhaDaTabela'+this.props.servidores[i]._id);
+        if(verificaSeTem){
+            if(linhaDaTabela !== null){
+                linhaDaTabela.classList.add("elementoAparece");
+                linhaDaTabela.classList.remove("elementoDesaparece");
+            }
+        }else{
+            if(linhaDaTabela !== null){
+                linhaDaTabela.classList.add("elementoDesaparece");
+                linhaDaTabela.classList.remove("elementoAparece");
+            }  
+        }
+    }
+}
+
   render() {
     return (
     <div className="col-12">
@@ -27,6 +49,8 @@ export default class TabelaServidor extends React.Component {
                         </tr>
                     </thead>
                     <tbody>
+
+                    {this.filtrarServidores()}
 
                         {this.props.servidores.map((elemento, i) => 
 

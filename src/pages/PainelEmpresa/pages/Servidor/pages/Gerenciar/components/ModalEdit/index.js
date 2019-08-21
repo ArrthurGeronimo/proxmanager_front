@@ -2,18 +2,16 @@ import React, { Component } from 'react'
 import { Button, Modal } from 'semantic-ui-react'
 
 import './style.css';
-
 import api from './../../../../../../../../services/api';
-
-import FormEdit from './../FormEdit';
 import ModalDelete from './../ModalDelete';
 
-export default class ModalEdit extends Component {
+export default class ModalEditServidores extends Component {
   constructor(props) {
     super(props);
-    this.state = { 
+    this.state = {
+      isMounted: false,
+      
       open: false,
-
       idDoServidor: '',
       nomeDoServidor: '',
       ipDoServidor: '',
@@ -33,27 +31,28 @@ export default class ModalEdit extends Component {
         "version": ""
       }
     }
-
     // Filho Manda Mensagem Para o Pai
     this.PegandoMensagemDoComponenteFilho = this.PegandoMensagemDoComponenteFilho.bind(this, true);
   }
 
-show = size => () => this.setState({ size, open: true })
+show = () => this.setState({ open: true })
 close = () => this.setState({ open: false })
 handleChange = name => event => {
   this.setState({ ...this.state, [name]: event.target.value, servidorConectado: false });
 };
 
 componentDidMount() {
-  this.setState({ 
-    ...this.state,
-    idDoServidor: this.props.servidor._id,
-    nomeDoServidor: this.props.servidor.nome,
-    ipDoServidor: this.props.servidor.ip,
-    porta: this.props.servidor.porta,
-    interface: this.props.servidor.interface,
-    login: this.props.servidor.login,
-    senha: this.props.servidor.senha
+  this.setState({ isMounted: true }, () => {
+    this.setState({ 
+      ...this.state,
+      idDoServidor: this.props.servidor._id,
+      nomeDoServidor: this.props.servidor.nome,
+      ipDoServidor: this.props.servidor.ip,
+      porta: this.props.servidor.porta,
+      interface: this.props.servidor.interface,
+      login: this.props.servidor.login,
+      senha: this.props.servidor.senha
+    });
   });
 }
 
@@ -61,16 +60,11 @@ componentDidMount() {
 PegandoMensagemDoComponenteFilho(value) {
   if(value === true){
     this.setState({ open: false });
-    this.atualizouInformarcoesDoServidor(true);
+    this.props.mandaDadosParaComponentePai(true); // avisa o pai
   }
   if(value === false){
     this.setState({ open: false });
-    this.atualizouInformarcoesDoServidor(false);
   }
-}
-
-atualizouInformarcoesDoServidor = (value) => {
-  this.props.mandaDadosParaComponentePai(value);
 }
 
 // Testar Conexão
@@ -86,42 +80,41 @@ renderInformacoesServidor = () => {
   
 }
 
-editarServidor = () =>  {
-  const obj = {
-    nome: this.state.nomeDoServidor,
-    ip: this.state.ipDoServidor,
-    porta: this.state.porta,
-    interface: this.state.interface,
-    login: this.state.login,
-    senha: this.state.senha
- };
+  editarServidor = () =>  {
+    const obj = {
+      nome: this.state.nomeDoServidor,
+      ip: this.state.ipDoServidor,
+      porta: this.state.porta,
+      interface: this.state.interface,
+      login: this.state.login,
+      senha: this.state.senha
+    };
 
- if (obj.ip === '') {
-     console.log('Falta IP');
- }else{
-     api.put(`/empresa/${window.localStorage.getItem('segredo')}/servidor/${this.props.servidor._id}`, obj)
-     .then(res => {
-        this.setState({ open: false });
-        this.atualizouInformarcoesDoServidor();
-  })
-  .catch(function (error) {
-      console.log(error);
-  })
- }
-};
+    if (obj.ip === '') {
+        console.log('Falta IP');
+    }else{
+        api.put(`/empresa/${window.localStorage.getItem('segredo')}/servidor/${this.props.servidor._id}`, obj)
+        .then(res => {
+          console.log('ModalEdit: ATUALIZOU');
+          this.setState({ open: false });
+          this.props.mandaDadosParaComponentePai(true); // avisa o pai
+      })
+      .catch(function (error) {
+          console.log(error);
+      })
+    }
+  };
 
 
 
   render() {
-    const { open, size } = this.state
-
     return (
       <div>
-        <a className="card-options-collapse" href="javascript:void(0)" onClick={this.show('fullscreen')}>
+        <a className="card-options-collapse" href="javascript:void(0)" onClick={this.show}>
           <i className="fe fe-edit"></i>
         </a>
 
-        <Modal size={size} open={open} onClose={this.close}>
+        <Modal size={'fullscreen'} open={this.state.open} onClose={this.close}>
           <Modal.Header>Atualizando Servidor</Modal.Header>
           <Modal.Content>
 
@@ -145,7 +138,6 @@ editarServidor = () =>  {
                         placeholder="Digite o IP do servidor (Ex. 192.168.0.1)"
                         value={this.state.ipDoServidor}
                         onChange={this.handleChange('ipDoServidor')}
-        
                     />
                 </div>
                 <div className="form-group">
@@ -188,7 +180,6 @@ editarServidor = () =>  {
                         onChange={this.handleChange('senha')}
                     />
                 </div>
-
             </div>
             <div className="col-sm-12 col-lg-6">
                 <div className="row">
@@ -202,9 +193,6 @@ editarServidor = () =>  {
                 </div>
             </div>
         </div>
-
-
-
 
           </Modal.Content>
           <Modal.Actions>
