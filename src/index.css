@@ -14,16 +14,7 @@
 .background-blue{
     background-color: var(--blue);
 }
-.feedback-simple{
-    display: block;
-    width: 100%;
-    margin-top: 0.25rem;
-    font-size: 87.5%;
-    color: var(--primary);
-}
-.feedback-simple span{
-    color: var(--dark);
-}
+
 
 .buttonInside{
     position:relative;
@@ -51,9 +42,6 @@ cursor:pointer;
 .ag-theme-balham .ag-ltr .ag-floating-filter-button {
     display: none;
 }
-.btn-disable{
-    position: no-drop !important;
-}
 /* BOTÃO ALTERNAR VISUALIZAÇAO */
 .btn-alternar-visualizacao{
     margin-left: 10px;
@@ -74,6 +62,7 @@ cursor:pointer;
     font-size: 12pt;
     color: var(--white);
 }
+/* ANIMAÇÃO DOS ELEMENTOS */
 .elementoDesaparece{
     display: none;
 }
@@ -83,8 +72,6 @@ cursor:pointer;
     -o-animation: fadeInFromNone 0.5s ease-out;
     animation: fadeInFromNone 0.5s ease-out;
 }
-
-/* APARECE */
 @-webkit-keyframes fadeInFromNone {
     0% {
         display: none;
@@ -132,4 +119,23 @@ cursor:pointer;
     100% {
         opacity: 1;
     }
+}
+
+/* input Warning */
+.feedback-simple{
+    display: block;
+    width: 100%;
+    margin-top: 0.25rem;
+    font-size: 87.5%;
+    color: var(--primary);
+}
+.feedback-simple span{
+    color: var(--dark);
+}
+.is-valid-warning{
+    border-color: var(--warning) !important;
+    background-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' fill='rgb(241, 196, 15)' viewBox='0 0 8 8'><path fill='60eba00' d='M2.3 6.73L.6 4.53c-.4-1.04.46-1.4 1.1-.8l1.1 1.4 3.4-3.8c.6-.63 1.6-.27 1.2.7l-4 4.6c-.43.5-.8.4-1.1.1z'/></svg>") !important;
+}
+.warning-feedback{
+    color: var(--warning) !important;
 }

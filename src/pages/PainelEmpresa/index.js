@@ -6,10 +6,10 @@ import NavBarSistemaNaoAutenticado from './../../components/Layout/NavbarNaoAute
 //import NavBarEmpresa from './Components/NabBarEmpresa';
 
 import Inicio from './pages/Inicio';
-import ServidorAdicionar from './pages/Servidor/pages/Adicionar';
-import ServidorGerenciar from './pages/Servidor/pages/Gerenciar';
-import PlanoAdicionar from './pages/Plano/pages/Adicionar';
-import PlanoGerenciar from './pages/Plano/pages/Gerenciar';
+import ServidorAdicionar from './pages/Servidor/adiciona';
+import ServidorGerenciar from './pages/Servidor/gerencia';
+import PlanoAdicionar from './pages/Plano/adiciona';
+import PlanoGerenciar from './pages/Plano/gerencia';
 
 export const pagePainelEmpresa = ({ match }) => {
 
