@@ -8,7 +8,6 @@ export default class FeedbackPlano extends Component {
         super(props);
         this.state = {
             isMounted: false,
-
             icone: '',
             animacaoIcone: true,
             corDoBackground: 'blue',
@@ -17,18 +16,16 @@ export default class FeedbackPlano extends Component {
             errorText: '',
             successOperacao: false,
             successText: '',
-            
-
             plano: [],
-            servidor: []
-
+            servidor: [],
+            idDoPlano: ''
         };
-
     }
 
     componentDidMount() {
         this.setState({ isMounted: true }, () => {
             if (this.state.isMounted) {
+                console.log('CardProgress: Montado');
                 this.setState({ 
                     isMounted: true,
                     icone: this.props.icone,
@@ -36,18 +33,19 @@ export default class FeedbackPlano extends Component {
                 });
     
                 if(this.props.categoria === 'CriarPlano'){
+                    console.log('CardProgress: CRIAR PLANO');
                     this.setState({ 
                         plano: this.props.elemento
                     }, () => {
                         this.criarPlano();
                     });
                 }else if(this.props.categoria === 'SalvarNoServidor'){
-                    let formatoJson = JSON.parse(this.props.elemento);
+                    console.log('CardProgress: SALVAR SERVIDOR');
                     this.setState({ 
-                        servidor: formatoJson
+                        servidor: this.props.elemento,
+                        idDoPlano: this.props.idDoPlano
                     }, () => {
                         this.salvarNoServidor();
-                        console.log(this.state.servidor)
                     });
                 }
             }
@@ -58,6 +56,8 @@ export default class FeedbackPlano extends Component {
     }
 
     criarPlano = () => {
+        console.log('CardProgress: Criando Plano');
+        console.log(this.state.plano);
         api.post(`/empresa/${window.localStorage.getItem('segredo')}/plano`, this.state.plano)
         .then(res => {
             console.log(res.data)
@@ -69,6 +69,10 @@ export default class FeedbackPlano extends Component {
                     executouOperacao: true,
                     successOperacao: true,
                     successText: 'Plano salvo no banco com sucesso'
+                }, () => {
+                    console.log('AVISAR O PAI QUE SALVOU')
+                    console.log(res.data.plano._id)
+                    this.props.avisaPaiQueCadastrouPlanoComSucesso(res.data.plano._id); // avisa o pai
                 });
             }else if(res.data.status === 'error'){
                 this.setState({ 
@@ -78,6 +82,8 @@ export default class FeedbackPlano extends Component {
                     executouOperacao: true,
                     errorOperacao: true,
                     errorText: 'Opa, alguma coisa deu errada...'
+                }, () => {
+                    this.props.avisaPaiQueCadastroDoPlanoDeuErro(true); // avisa o pai
                 });
             }
             
@@ -88,7 +94,7 @@ export default class FeedbackPlano extends Component {
     }
 
     salvarNoServidor = () => {
-        //
+        console.log(this.state.idDoPlano)
     }
 
     executarNovamente = () => {

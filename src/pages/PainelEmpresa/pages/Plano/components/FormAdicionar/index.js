@@ -22,10 +22,16 @@ export default class AdicionarPlano extends Component {
             servidoresSelecionados: [],
             jsonServidoresSelecionados: {},
             plano: [],
-            renderFeedbackPlano: false
+            renderFeedbackPlano: false,
+            renderFeedbackPlanoCadastradoComSucesso: false,
+            sicronizacaoEmAndamento: false,
+            idDoPlanoCriado: ''
         };
+        // Pegando Mensagem do Filho
+        //this.VerificaSeCadastrouPlanoComSucesso = this.VerificaSeCadastrouPlanoComSucesso.bind(this, true);
+        this.VerificaSeCadastroDoPlanoDeuErro = this.VerificaSeCadastroDoPlanoDeuErro.bind(this, true);
     }
-// HandleChange
+// HandleChange : INPUT's
     handleChange = name => event => {
         if(name === 'preco'){
             this.setState({ [name]: priceMask(event.target.value) });
@@ -35,6 +41,12 @@ export default class AdicionarPlano extends Component {
             this.setState({ [name]: event.target.value });
         }
     };
+// HandleChange : CHECKBOX's
+    toggleChange = name => event => {
+        this.setState({
+          [name]: event.target.checked,
+        });
+      }
 // Lifecycle do Componente
     componentDidMount() {
         this.setState({ isMounted: true });
@@ -51,8 +63,6 @@ export default class AdicionarPlano extends Component {
         .then(res => {
             this.setState({
                 servidores: res.data.servidores
-            }, () => {
-                console.log(this.state.servidores)
             });
         })
         .catch(function (error) {
@@ -61,9 +71,10 @@ export default class AdicionarPlano extends Component {
     };
 // CRIA plano
 adicionarPlano = () =>  {
-
+    console.log('Adiciona Plano');
     const obj = {
         nome: this.state.nomeDoPlano,
+        slug: this.state.slug,
         download: this.state.download,
         upload: this.state.upload,
         preco: this.state.preco,
@@ -72,14 +83,12 @@ adicionarPlano = () =>  {
         },
         servidor: this.state.servidoresSelecionados
     };
-
     this.setState({
         plano: obj,
         renderFeedbackPlano: true
     })
+   
 
-    console.log(obj);
-    
     /*
     api.post(`/empresa/${window.localStorage.getItem('segredo')}/plano`, obj)
     .then(function (response) {
@@ -92,20 +101,35 @@ adicionarPlano = () =>  {
     */
 };
 // MONTA ARRAY dos servidores
-alternarServidor = (idDoServidor, index, nomeDoServidor) =>{
+arrumarServidores = () =>{
+    console.log('Arruma Array');
+    for (let i = 0; i < this.state.servidores.length; i++){
+        if(this.state[`servidor${i}`] === true){
+            var json = JSON.stringify({ _id: this.state.servidores[i]._id, nome: this.state.servidores[i].nome });
+            let jsonServidores = JSON.parse(json);
+            setTimeout(() => {
+                this.setState({
+                    servidoresSelecionados: [...this.state.servidoresSelecionados, jsonServidores],
+                    sicronizacaoEmAndamento: true
+                }, () => {
+                    this.adicionarPlano();
+                });
+            }, 1000);
+        }
+    }
+
     //var json = `{"_id":"${idDoServidor}", "nome":"${nomeDoServidor}"}`;
     //var json = JSON.stringify({ _id: idDoServidor, nome: nomeDoServidor });
     //console.log(json);
     //let jsonServidores = JSON.parse(json);
     //console.log(jsonServidores);
     //let servidoresSelecionados = this.state.servidoresSelecionados;
-
+    /*
     var json = JSON.stringify({ _id: idDoServidor, nome: nomeDoServidor });
     let array = this.state.servidoresSelecionados;
     let found = array.find(function(element) {
         return element === json;
     });
-    
     if(found === undefined || found === 'undefined' ){
         // ADICIONA NO ARRAY DOS SERVIDORES
         this.setState({
@@ -123,32 +147,81 @@ alternarServidor = (idDoServidor, index, nomeDoServidor) =>{
             //console.log('Removeu do Array');
         });
     }
+    */
 }
 // Render Container
-renderContainerFeedbackPlano = () => {
-    if(this.state.renderFeedbackPlano){
-        return(
-            <div>
-                <h1 className="page-title">Sicronização do Plano</h1>
-
-                <CardProgresso 
-                    icone='fe-refresh-cw' 
-                    animacaoIcone={true} 
-                    categoria='CriarPlano'
-                    elemento={this.state.plano}
-                />
-
-                {this.state.servidoresSelecionados.map((element, i) => 
-                    this.renderCardCadastroServidor(element, i)
-                )}
-
-            </div>
-        )
-    }else{
-        return(
-            <div>
-            </div>
-        )
+renderContainerFeedbackCadastraPlano = () => {
+        if(this.state.renderFeedbackPlano){
+            console.log('Feedback! Cadastrar Plano');
+            return(
+                <div>
+                    <h1 className="page-title">Sicronização do Plano</h1>
+    
+                    <CardProgresso 
+                        icone='fe-refresh-cw' 
+                        animacaoIcone={true} 
+                        categoria='CriarPlano'
+                        elemento={this.state.plano}
+                        avisaPaiQueCadastrouPlanoComSucesso={this.VerificaSeCadastrouPlanoComSucesso.bind(this)}
+                        avisaPaiQueCadastroDoPlanoDeuErro={this.VerificaSeCadastroDoPlanoDeuErro}
+                    />
+    
+                    {/* VERIFICA SE O PLANO EXISTE 
+    
+                    {this.state.servidoresSelecionados.map((element, i) => 
+                        this.renderCardCadastroServidor(element, i)
+                    )}
+                    */}
+    
+                </div>
+            )
+        }else{
+            return(
+                <div>
+                </div>
+            )
+        }
+}
+renderContainerFeedbackCadastraServidores = () => {
+    if(this.state.sicronizacaoEmAndamento){
+        if(this.state.renderFeedbackPlanoCadastradoComSucesso){
+            console.log('Feedback! Cadastrar Servidores');
+            return(
+                <div>
+    
+                    {this.state.servidoresSelecionados.map((element, i) => 
+                        this.renderCardCadastroServidor(element, i)
+                    )}
+    
+                </div>
+            )
+        }else{
+            return(
+                <div>
+                </div>
+            )
+        }
+    }
+}
+// Pegando Mensagem do Filho
+VerificaSeCadastrouPlanoComSucesso = (value) => {
+    console.log('RECEBEU DADOS DO FILHO -> '+value);
+    this.setState({idDoPlanoCriado: value, renderFeedbackPlanoCadastradoComSucesso: true }, () => {
+        console.log(this.state.idDoPlanoCriado)
+    });
+    /*
+    console.log('RECEBEU DADOS DO FILHO -> '+value);
+    if(value){
+      this.setState({ sicronizacaoEmAndamento: true , renderFeedbackPlanoCadastradoComSucesso: true });
+      //this.props.mandaDadosParaComponentePai(true); // avisa o pai
+    }
+    */
+}
+VerificaSeCadastroDoPlanoDeuErro = (value) => {
+    console.log('RECEBEU DADOS DO FILHO -> '+value);
+    if(value){
+        this.setState({ sicronizacaoEmAndamento: false });
+        //this.props.mandaDadosParaComponentePai(true); // avisa o pai
     }
 }
 // RENDER card de progresso do salvamento do servidor
@@ -160,6 +233,7 @@ renderCardCadastroServidor = (element, index) => {
             animacaoIcone={true} 
             categoria='SalvarNoServidor'
             elemento={element}
+            idDoPlano={this.state.idDoPlanoCriado}
         />
     )
 }
@@ -280,17 +354,34 @@ render() {
 
                     {this.state.servidores.map((elemento, i) => 
                         <label className="custom-control custom-checkbox" key={i}>
-                            <input type="checkbox" className="custom-control-input" value={elemento._id} onClick={() => { this.alternarServidor(elemento._id, i, elemento.nome) }} />
+                            <input 
+                                type="checkbox" 
+                                className="custom-control-input"
+                                defaultChecked={false}
+                                onChange={this.toggleChange(`servidor${i}`)} />
                             <span className="custom-control-label">{elemento.nome}</span>
                         </label>
                     )}
+
+                    {/*
+                    <label className="custom-control custom-checkbox" key={i}>
+                            <input type="checkbox" className="custom-control-input" value={elemento._id} onClick={() => { this.alternarServidor(elemento._id, i, elemento.nome) }} />
+                            <span className="custom-control-label">{elemento.nome}</span>
+                        </label>
+                    */}
 
                 </div>
             </div>
 
             <div className="form-group">
                 <div className="form-footer">
-                    <button className="btn btn-primary btn-block" onClick={this.adicionarPlano}>Criar Plano</button>
+
+                    {this.state.sicronizacaoEmAndamento ?
+                        <button className="btn btn-primary btn-block btn-disable">Sicronização em andamento</button>
+                    :
+                        <button className="btn btn-primary btn-block" onClick={this.arrumarServidores}>Criar Plano</button>
+                    }
+                    
                 </div>
             </div>
         </div>
@@ -298,9 +389,9 @@ render() {
         <div className="col-sm-12 col-lg-6">
             <div className="containerFeedbackPlano">
                 
-
-                {this.renderContainerFeedbackPlano()}
-
+                {this.renderContainerFeedbackCadastraPlano()}
+                {this.renderContainerFeedbackCadastraServidores()}
+                
             </div>
         </div>
 
