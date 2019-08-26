@@ -25,7 +25,7 @@ export default class FeedbackPlano extends Component {
     componentDidMount() {
         this.setState({ isMounted: true }, () => {
             if (this.state.isMounted) {
-                console.log('CardProgress: Montado');
+                //console.log('CardProgress: Montado');
                 this.setState({ 
                     isMounted: true,
                     icone: this.props.icone,
@@ -33,14 +33,14 @@ export default class FeedbackPlano extends Component {
                 });
     
                 if(this.props.categoria === 'CriarPlano'){
-                    console.log('CardProgress: CRIAR PLANO');
+                    //console.log('CardProgress: CRIAR PLANO');
                     this.setState({ 
                         plano: this.props.elemento
                     }, () => {
                         this.criarPlano();
                     });
                 }else if(this.props.categoria === 'SalvarNoServidor'){
-                    console.log('CardProgress: SALVAR SERVIDOR');
+                    //console.log('CardProgress: SALVAR SERVIDOR');
                     this.setState({ 
                         servidor: this.props.elemento,
                         idDoPlano: this.props.idDoPlano
@@ -56,11 +56,11 @@ export default class FeedbackPlano extends Component {
     }
 
     criarPlano = () => {
-        console.log('CardProgress: Criando Plano');
-        console.log(this.state.plano);
+        //console.log('CardProgress: Criando Plano');
+        //console.log(this.state.plano);
         api.post(`/empresa/${window.localStorage.getItem('segredo')}/plano`, this.state.plano)
         .then(res => {
-            console.log(res.data)
+            //console.log(res.data)
             if(res.data.status === 'success'){
                 this.setState({ 
                     icone: 'fe-check',
@@ -68,10 +68,10 @@ export default class FeedbackPlano extends Component {
                     corDoBackground: 'green',
                     executouOperacao: true,
                     successOperacao: true,
-                    successText: 'Plano salvo no banco com sucesso'
+                    successText: 'Plano cadastrado no banco com sucesso'
                 }, () => {
-                    console.log('AVISAR O PAI QUE SALVOU')
-                    console.log(res.data.plano._id)
+                    //console.log('AVISAR O PAI QUE SALVOU')
+                    //console.log(res.data.plano._id)
                     this.props.avisaPaiQueCadastrouPlanoComSucesso(res.data.plano._id); // avisa o pai
                 });
             }else if(res.data.status === 'error'){
@@ -89,12 +89,38 @@ export default class FeedbackPlano extends Component {
             
         })
         .catch(function (error) {
-            console.log(error);
+            //console.log(error);
         })
     }
 
     salvarNoServidor = () => {
-        console.log(this.state.idDoPlano)
+        api.get(`/empresa/${window.localStorage.getItem('segredo')}/plano/${this.state.idDoPlano}/servidor/${this.state.servidor._id}`)
+        .then(res => {
+            //console.log(res.data)
+            if(res.data.status === 'success'){
+                this.setState({ 
+                    icone: 'fe-check',
+                    animacaoIcone: false,
+                    corDoBackground: 'green',
+                    executouOperacao: true,
+                    successOperacao: true,
+                    successText: 'Plano escrito no servidor com sucesso'
+                });
+            }else if(res.data.status === 'error'){
+                this.setState({ 
+                    icone: 'fe fe-x',
+                    animacaoIcone: false,
+                    corDoBackground: 'red',
+                    executouOperacao: true,
+                    errorOperacao: true,
+                    errorText: 'Opa, alguma coisa deu errada...'
+                });
+            }
+            
+        })
+        .catch(function (error) {
+            //console.log(error);
+        })
     }
 
     executarNovamente = () => {
@@ -108,6 +134,16 @@ export default class FeedbackPlano extends Component {
                 this.criarPlano();
             });
         }
+        if(this.props.categoria === 'SalvarNoServidor'){
+            this.setState({ 
+                icone: 'fe-refresh-cw',
+                animacaoIcone: true,
+                corDoBackground: 'blue',
+                executouOperacao: false,
+            }, () => {
+                this.salvarNoServidor();
+            });
+        }
     }
 
     renderTextoDoCard = () =>{
@@ -117,7 +153,7 @@ export default class FeedbackPlano extends Component {
             )
         }else if(this.props.categoria === 'SalvarNoServidor'){
             return(
-                <h4 className="m-0"><small>Cadastrando plano no servidor </small> {this.state.servidor.nome} </h4>
+                <h4 className="m-0"><small>Escrevendo plano no servidor </small> {this.state.servidor.nome} </h4>
             )
         }
     }

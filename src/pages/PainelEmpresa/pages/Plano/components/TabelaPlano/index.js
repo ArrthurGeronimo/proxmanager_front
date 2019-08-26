@@ -15,7 +15,7 @@ export default class TabelaServidor extends Component {
 componentDidMount() {
     this.setState({ isMounted: true }, () => {
         if (this.state.isMounted) {
-            this.filtrarServidores(); 
+            this.filtrarPlanos(); 
         }
     });
 }
@@ -24,18 +24,18 @@ componentWillUnmount() {
 }
 // Pegando Mensagem do Filho
 PegandoMensagemDoComponenteFilho = (value) => {
-    console.log('TabelaServidor: CHEGOU MENSAGEM DO FILHO')
+    //console.log('TabelaServidor: CHEGOU MENSAGEM DO FILHO')
     if(value){
     this.props.mandaDadosParaComponentePai(true); // avisa o pai
     }
 }
 // Filtragem dos elementos
-filtrarServidores = () => {
-    for(let i=0; i < this.props.servidores.length; i++){
-        let toString = JSON.stringify(this.props.servidores[i]).toLowerCase();
+filtrarPlanos = () => {
+    for(let i=0; i < this.props.planos.length; i++){
+        let toString = JSON.stringify(this.props.planos[i]).toLowerCase();
         let inputPesquisa = (this.props.filtro.toLowerCase());
         let verificaSeTem = toString.includes(inputPesquisa);
-        let linhaDaTabela = document.getElementById('linhaDaTabela'+this.props.servidores[i]._id);
+        let linhaDaTabela = document.getElementById('linhaDaTabela'+this.props.planos[i]._id);
         if(verificaSeTem){
             if(linhaDaTabela !== null){
                 linhaDaTabela.classList.add("elementoAparece");
@@ -54,24 +54,23 @@ filtrarServidores = () => {
     return (
     <div className="col-12">
         <div className="card">
-            <div className="table-responsive table-gerenciar-servidores">
+            <div className="table-responsive">
                 <table className="table card-table table-vcenter text-nowrap">
                     <thead>
                         <tr>
-                            <th className="w-1">Conexão</th>
-                            <th>Nome</th>
-                            <th>Autenticação</th>
+                            <th className="w-1">Nome</th>
                             <th>Informações</th>
-                            <th>Cadastros</th>
+                            <th>Servidores</th>
+                            <th>Autenticações</th>
                         </tr>
                     </thead>
                     <tbody>
 
-                    {this.filtrarServidores()}
+                    {this.filtrarPlanos()}
 
-                        {this.props.servidores.map((elemento, i) => 
+                        {this.props.planos.map((elemento, i) => 
 
-                            <LinhaDaTabela key={i} servidor={elemento} mandaDadosParaComponentePai={this.PegandoMensagemDoComponenteFilho} />
+                            <LinhaDaTabela key={i} plano={elemento} mandaDadosParaComponentePai={this.PegandoMensagemDoComponenteFilho} />
 
                         )}
 

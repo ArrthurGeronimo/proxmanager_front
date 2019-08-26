@@ -102,7 +102,7 @@ adicionarPlano = () =>  {
 };
 // MONTA ARRAY dos servidores
 arrumarServidores = () =>{
-    console.log('Arruma Array');
+    //console.log('Arruma Array');
     for (let i = 0; i < this.state.servidores.length; i++){
         if(this.state[`servidor${i}`] === true){
             var json = JSON.stringify({ _id: this.state.servidores[i]._id, nome: this.state.servidores[i].nome });
@@ -152,7 +152,7 @@ arrumarServidores = () =>{
 // Render Container
 renderContainerFeedbackCadastraPlano = () => {
         if(this.state.renderFeedbackPlano){
-            console.log('Feedback! Cadastrar Plano');
+            //console.log('Feedback! Cadastrar Plano');
             return(
                 <div>
                     <h1 className="page-title">Sicronização do Plano</h1>
@@ -185,7 +185,7 @@ renderContainerFeedbackCadastraPlano = () => {
 renderContainerFeedbackCadastraServidores = () => {
     if(this.state.sicronizacaoEmAndamento){
         if(this.state.renderFeedbackPlanoCadastradoComSucesso){
-            console.log('Feedback! Cadastrar Servidores');
+            //console.log('Feedback! Cadastrar Servidores');
             return(
                 <div>
     
@@ -205,7 +205,7 @@ renderContainerFeedbackCadastraServidores = () => {
 }
 // Pegando Mensagem do Filho
 VerificaSeCadastrouPlanoComSucesso = (value) => {
-    console.log('RECEBEU DADOS DO FILHO -> '+value);
+    //console.log('RECEBEU DADOS DO FILHO -> '+value);
     this.setState({idDoPlanoCriado: value, renderFeedbackPlanoCadastradoComSucesso: true }, () => {
         console.log(this.state.idDoPlanoCriado)
     });
@@ -218,7 +218,7 @@ VerificaSeCadastrouPlanoComSucesso = (value) => {
     */
 }
 VerificaSeCadastroDoPlanoDeuErro = (value) => {
-    console.log('RECEBEU DADOS DO FILHO -> '+value);
+    //console.log('RECEBEU DADOS DO FILHO -> '+value);
     if(value){
         this.setState({ sicronizacaoEmAndamento: false });
         //this.props.mandaDadosParaComponentePai(true); // avisa o pai

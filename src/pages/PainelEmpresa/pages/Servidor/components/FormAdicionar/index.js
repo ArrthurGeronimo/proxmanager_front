@@ -48,7 +48,12 @@ export default class FormAdicionaServidor extends Component {
         }
     }
     handleChange = name => event => {
-        this.setState({ ...this.state, [name]: event.target.value, servidorConectado: false });
+        if(name === 'nomeDoServidor' || name === 'interface'){
+            this.setState({ ...this.state, [name]: event.target.value });
+        }else{
+            this.setState({ ...this.state, [name]: event.target.value, servidorConectado: false });
+        }
+       
     };
 // Lifecycle do Componente
     componentDidMount() {

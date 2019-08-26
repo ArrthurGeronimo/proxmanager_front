@@ -236,12 +236,13 @@ componentDidMount() {
 
   render() {
         return(
-            <tr id={'linhaDaTabela'+this.props.servidor._id} key={this.props.servidor._id} className='celula-servidor-conectado'>
+            <tr id={'linhaDaTabela'+this.props.servidor._id} key={this.props.servidor._id} 
+            className={'celula-servidor-conectado ' +(this.state.conexaoEstabelecida ? ' linha-tabela-servidor-conectado ' : ' linha-tabela-servidor-desconectado ')}>
                 <td className='td-table-servidor-conexao'>
                     {this.state.conexaoEstabelecida ?
                         <img src={animacaServidorConectado} alt="Ícone Wifi" />
                     :
-                        <img src={animacaServidorConectado} alt="Ícone Wifi" />
+                        <img src={animacaServidorDesconectado} alt="Ícone Wifi" />
                     }
                     <span 
                         className={"badge badgePageServidor " +(this.state.conexaoEstabelecida ? ' badge-success ' : ' badge-danger ')}>

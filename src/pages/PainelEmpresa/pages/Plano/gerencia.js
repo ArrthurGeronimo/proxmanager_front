@@ -4,14 +4,16 @@ import './gerencia.css';
 
 import api from './../../../../services/api';
 import ContainerCards from './components/ContainerCards';
-import TabelaServidor from './components/TabelaServidor';
+import TabelaPlano from './components/TabelaPlano';
 
 
-export default class GerenciarServidores extends Component {
+export default class GerenciarPlanos extends Component {
     constructor(props) {
         super(props);
         this.state = {
             isMounted: false,
+
+            planos:[],
 
             servidores: [],
             inputPesquisa: '',
@@ -30,7 +32,7 @@ export default class GerenciarServidores extends Component {
     componentDidMount() {
         this.setState({ isMounted: true }, () =>{
             if (this.state.isMounted) {
-                this.pegarServidoresDoBanco(); 
+                this.pegarPlanosDoBanco(); 
             }
         });
     }
@@ -38,12 +40,14 @@ export default class GerenciarServidores extends Component {
         this.setState({ isMounted: false});
     }
 // Consultas a API
-    pegarServidoresDoBanco = () =>  {
-        api.get(`/empresa/${window.localStorage.getItem('segredo')}/servidores`)
+    pegarPlanosDoBanco = () =>  {
+        api.get(`/empresa/${window.localStorage.getItem('segredo')}/planos`)
         .then(res => {
             this.setState({
-                servidores: res.data.servidores,
+                planos: res.data.planos,
                 mostrarVisualizacao: true
+            }, () => {
+                console.log(this.state.planos)
             });
         })
         .catch(function (error) {
@@ -67,7 +71,7 @@ export default class GerenciarServidores extends Component {
         if(this.state.mostrarVisualizacao){
             if(this.state.visualizacaoAtiva === 'tabela'){
                 return(
-                    <TabelaServidor servidores={this.state.servidores} filtro={this.state.inputPesquisa} mandaDadosParaComponentePai={this.SolicitarDadosDaApi} />
+                    <TabelaPlano planos={this.state.planos} filtro={this.state.inputPesquisa} mandaDadosParaComponentePai={this.SolicitarDadosDaApi} />
                 )
             }else if(this.state.visualizacaoAtiva === 'cartao'){
                 return(
@@ -79,13 +83,13 @@ export default class GerenciarServidores extends Component {
 
     render() {
         return (
-            <div className="my-3 my-md-5 page-gerenciar-servidores">
+            <div className="my-3 my-md-5">
             <div className="container">
             <div className="page-header">
               <h1 className="page-title">
-                Servidores
+                Planos
               </h1>
-              <div className="page-subtitle">{this.state.servidores.length} servidores cadastrados</div>
+              <div className="page-subtitle">{this.state.planos.length} planos cadastrados</div>
               <div className="page-options d-flex">
                 <Popup
                     header='Visualização por cartões'
@@ -93,8 +97,9 @@ export default class GerenciarServidores extends Component {
                     on='hover'
                     trigger={
                         <button 
-                        className={"btn btn-sm btn-alternar-visualizacao " + (this.state.visualizacaoAtiva === 'cartao' ? 'btn-alternar-visualizacao-active' : '')}
-                        onClick={() => {this.alternarVisualizacao('cartao')}}>
+                        className={"btn btn-sm btn-disable btn-alternar-visualizacao " + (this.state.visualizacaoAtiva === 'cartao' ? 'btn-alternar-visualizacao-active' : '')}
+                        //onClick={() => {this.alternarVisualizacao('cartao')}}
+                        >
                             <span className="fe fe-grid"></span>
                         </button>
                     }
@@ -120,7 +125,7 @@ export default class GerenciarServidores extends Component {
                         onChange={this.handleChange('inputPesquisa')}
                         value={this.state.inputPesquisa}
                         className="form-control w-10" 
-                        placeholder="Procurar Servidor"
+                        placeholder="Procurar Plano"
                     />
                 </div>
                 {/* 
@@ -131,12 +136,7 @@ export default class GerenciarServidores extends Component {
               </div>
             </div>
               <div className="row">
-                    {this.renderVisualizacao()}
-                {/* 
-                    {this.state.servidores.map((element, i) => 
-                        <CardServidor key={i} servidor={element} mandaDadosParaComponentePai={this.SolicitarDadosDaApi} />
-                    )}
-                */}  
+                    {this.renderVisualizacao()} 
                 </div>
             </div>
           </div>
