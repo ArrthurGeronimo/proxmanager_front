@@ -4,16 +4,14 @@ import './gerencia.css';
 
 import api from './../../../../services/api';
 import ContainerCards from './components/ContainerCards';
-import TabelaPlano from './components/TabelaPlano';
+import TabelaServidor from './components/TabelaServidor';
 
 
-export default class GerenciarPlanos extends Component {
+export default class GerenciarServidores extends Component {
     constructor(props) {
         super(props);
         this.state = {
             isMounted: false,
-
-            planos:[],
 
             servidores: [],
             inputPesquisa: '',
@@ -32,7 +30,6 @@ export default class GerenciarPlanos extends Component {
     componentDidMount() {
         this.setState({ isMounted: true }, () =>{
             if (this.state.isMounted) {
-                this.pegarPlanosDoBanco();
                 this.pegarServidoresDoBanco(); 
             }
         });
@@ -41,24 +38,12 @@ export default class GerenciarPlanos extends Component {
         this.setState({ isMounted: false});
     }
 // Consultas a API
-    pegarPlanosDoBanco = () =>  {
-        api.get(`/empresa/${window.localStorage.getItem('segredo')}/planos`)
-        .then(res => {
-            this.setState({
-                planos: res.data.planos,
-                mostrarVisualizacao: true
-            });
-        })
-        .catch(function (error) {
-            console.log(error);
-        })
-    };
-// Consultas a API
     pegarServidoresDoBanco = () =>  {
         api.get(`/empresa/${window.localStorage.getItem('segredo')}/servidores`)
         .then(res => {
             this.setState({
-                servidores: res.data.servidores
+                servidores: res.data.servidores,
+                mostrarVisualizacao: true
             });
         })
         .catch(function (error) {
@@ -68,7 +53,7 @@ export default class GerenciarPlanos extends Component {
 // Pegando Mensagem do Filho
     SolicitarDadosDaApi = (value) => {
         if(value){
-            this.pegarPlanosDoBanco();
+            this.pegarServidoresDoBanco();
         }
     }
 // Alternar entre as visualizações
@@ -82,7 +67,7 @@ export default class GerenciarPlanos extends Component {
         if(this.state.mostrarVisualizacao){
             if(this.state.visualizacaoAtiva === 'tabela'){
                 return(
-                    <TabelaPlano planos={this.state.planos} listaServidores={this.state.servidores} filtro={this.state.inputPesquisa} mandaDadosParaComponentePai={this.SolicitarDadosDaApi} />
+                    <TabelaServidor servidores={this.state.servidores} filtro={this.state.inputPesquisa} mandaDadosParaComponentePai={this.SolicitarDadosDaApi} />
                 )
             }else if(this.state.visualizacaoAtiva === 'cartao'){
                 return(
@@ -94,13 +79,13 @@ export default class GerenciarPlanos extends Component {
 
     render() {
         return (
-            <div className="my-3 my-md-5">
+            <div className="my-3 my-md-5 page-gerenciar-servidores">
             <div className="container">
             <div className="page-header">
               <h1 className="page-title">
-                Planos
+                Clientes
               </h1>
-              <div className="page-subtitle">{this.state.planos.length} planos cadastrados</div>
+              <div className="page-subtitle">{this.state.servidores.length} servidores cadastrados</div>
               <div className="page-options d-flex">
                 <Popup
                     header='Visualização por cartões'
@@ -108,9 +93,8 @@ export default class GerenciarPlanos extends Component {
                     on='hover'
                     trigger={
                         <button 
-                        className={"btn btn-sm btn-disable btn-alternar-visualizacao " + (this.state.visualizacaoAtiva === 'cartao' ? 'btn-alternar-visualizacao-active' : '')}
-                        //onClick={() => {this.alternarVisualizacao('cartao')}}
-                        >
+                        className={"btn btn-sm btn-alternar-visualizacao " + (this.state.visualizacaoAtiva === 'cartao' ? 'btn-alternar-visualizacao-active' : '')}
+                        onClick={() => {this.alternarVisualizacao('cartao')}}>
                             <span className="fe fe-grid"></span>
                         </button>
                     }
@@ -136,7 +120,7 @@ export default class GerenciarPlanos extends Component {
                         onChange={this.handleChange('inputPesquisa')}
                         value={this.state.inputPesquisa}
                         className="form-control w-10" 
-                        placeholder="Procurar Plano"
+                        placeholder="Procurar Servidor"
                     />
                 </div>
                 {/* 
@@ -147,7 +131,12 @@ export default class GerenciarPlanos extends Component {
               </div>
             </div>
               <div className="row">
-                    {this.renderVisualizacao()} 
+                    {this.renderVisualizacao()}
+                {/* 
+                    {this.state.servidores.map((element, i) => 
+                        <CardServidor key={i} servidor={element} mandaDadosParaComponentePai={this.SolicitarDadosDaApi} />
+                    )}
+                */}  
                 </div>
             </div>
           </div>

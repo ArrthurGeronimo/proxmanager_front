@@ -22,7 +22,7 @@ export default class LinhaDaTabelaServidor extends Component {
 // Lifecycle do Componente
 componentDidMount() {
     this.setState({ isMounted: true }, () => {
-      console.log(this.props.plano)
+      //console.log(this.props.plano)
     });
   }
   componentWillUnmount() {
@@ -62,7 +62,7 @@ componentDidMount() {
                     <div style={{display: 'grid'}}>
                         {this.props.plano.nome}
                         <div className="selectgroup selectgroup-pills">
-                            <ModalEdit plano={this.props.plano} mandaDadosParaComponentePai={this.PegandoMensagemDoComponenteFilho} origemDoBotao='tabela' />
+                            <ModalEdit plano={this.props.plano} listaServidores={this.props.listaServidores} mandaDadosParaComponentePai={this.PegandoMensagemDoComponenteFilho} origemDoBotao='tabela' />
                             <Popup
                                 header='Clientes'
                                 content={'Clique aqui para ver a lista com todos os clientes nesse plano'}

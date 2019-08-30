@@ -10,6 +10,8 @@ import ServidorAdicionar from './pages/Servidor/adiciona';
 import ServidorGerenciar from './pages/Servidor/gerencia';
 import PlanoAdicionar from './pages/Plano/adiciona';
 import PlanoGerenciar from './pages/Plano/gerencia';
+import ClienteAdicionar from './pages/Cliente/adiciona';
+import ClienteGerenciar from './pages/Cliente/gerencia';
 
 export const pagePainelEmpresa = ({ match }) => {
 
@@ -64,8 +66,8 @@ export const pagePainelEmpresa = ({ match }) => {
                 <li className="nav-item dropdown">
                   <a href="javascript:void(0)" className="nav-link" data-toggle="dropdown"><i className="fe fe-calendar"></i> Clientes</a>
                   <div className="dropdown-menu dropdown-menu-arrow">
-                    <a href="#" className="dropdown-item ">Clientes</a>
-                    <Link to={`${match.url}/gerenciar_servidor`} className="dropdown-item">Planos</Link>
+                    <Link to={`${match.url}/adicionar_cliente`} className="dropdown-item">Adicionar Clientes</Link>
+                    <Link to={`${match.url}/gerenciar_cliente`} className="dropdown-item">Gerenciar Clientes</Link>
                     <a href="#" className="dropdown-item ">IP Pool</a>
                   </div>
                 </li>
@@ -124,6 +126,14 @@ const SubView = ({ match }) => {
   }else if(match.params.sectionName === 'adicionar_plano'){
     return(
       <PlanoAdicionar />
+    )
+  }else if(match.params.sectionName === 'adicionar_cliente'){
+    return(
+      <ClienteAdicionar />
+    )
+  }else if(match.params.sectionName === 'gerenciar_cliente'){
+    return(
+      <ClienteGerenciar />
     )
   }else{
     return(

@@ -1,0 +1,11 @@
+.ui.secondary.menu .item {
+    width: 20%;
+}
+.ui.secondary.pointing.menu .active.item:hover {
+    border-color: var(--primary);
+    color: var(--dark);
+}
+.ui.secondary.pointing.menu .active.item {
+    border-color: var(--primary);
+    color: var(--dark);
+}

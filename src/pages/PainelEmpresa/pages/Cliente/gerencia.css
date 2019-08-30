@@ -1,0 +1,75 @@
+.cardServidor{
+    height: 315px;
+}
+.card-body-image{
+    width: 30%;
+    align-items: center;
+    align-content: center;
+    display: grid;
+}
+.card-body-informations{
+    width: 70%;
+    text-align: justify;
+    padding-left: 10px;
+    align-content: center;
+    display: grid;
+}
+.card-body-custom{
+    padding: 5px;
+    display: flex;
+}
+.badgePageServidor{
+    width: fit-content;
+    margin: 0px auto;
+}
+.iconeCardServidor{
+    padding-right: 5px; 
+}
+.text-align-center{
+    text-align: center;
+}
+.dropdown-proxmanager > .dropdown-menu > a{
+    color: #303030;
+    margin-left: 0;
+    font-weight: bolder;
+}
+.dropdown-proxmanager > .dropdown-menu > a:hover{
+    color: #000;
+}
+.dropdown-proxmanager > .dropdown-menu{
+    transform: translate3d(-147px, 20px, 0px) !important;
+    /* transform: none !important */
+}
+.dropdown-proxmanager > .dropdown-menu > a > i{
+    color: #303030;
+    font-weight: bolder;
+}
+.card-body-conexao{
+    width: 70%;
+    text-align: center;
+    padding-left: 10px;
+    align-content: center;
+    display: grid;
+}
+.card-body-conexao img{
+    width: 50px;
+    height: auto;
+    margin: 0px auto;
+}
+.spanPageServidor{
+    color: #467fcf;
+}
+.spanPageServidorGreen{
+    color: #5eba00;
+}
+.spanPageServidorRed{
+    color: #cd201f;
+}
+
+.page-gerenciar-servidores .btn-pesquisar{
+    margin-left: 15px;
+    width: 40px;
+}
+.page-gerenciar-servidores .btn-pesquisar span{
+    font-size: 12pt;
+}

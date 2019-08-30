@@ -39,13 +39,26 @@ export default class FeedbackPlano extends Component {
                     }, () => {
                         this.criarPlano();
                     });
+                }else if(this.props.categoria === 'EditarPlano') {
+                    this.setState({ 
+                        plano: this.props.elemento
+                    }, () => {
+                        this.editarPlano();
+                    });
                 }else if(this.props.categoria === 'SalvarNoServidor'){
-                    //console.log('CardProgress: SALVAR SERVIDOR');
                     this.setState({ 
                         servidor: this.props.elemento,
                         idDoPlano: this.props.idDoPlano
                     }, () => {
                         this.salvarNoServidor();
+                    });
+                }else if(this.props.categoria === 'EditarNoServidor'){
+                    console.log('EDITANDO NO SERVIDOR')
+                    this.setState({ 
+                        servidor: this.props.elemento,
+                        idDoPlano: this.props.idDoPlano
+                    }, () => {
+                        this.editarNoServidor();
                     });
                 }
             }
@@ -93,6 +106,43 @@ export default class FeedbackPlano extends Component {
         })
     }
 
+    editarPlano = () => {
+        //console.log('CardProgress: Criando Plano');
+        api.put(`/empresa/${window.localStorage.getItem('segredo')}/plano/${this.props.elemento._id}`, this.state.plano)
+        .then(res => {
+            //console.log(res.data)
+            if(res.data.status === 'success'){
+                this.setState({ 
+                    icone: 'fe-check',
+                    animacaoIcone: false,
+                    corDoBackground: 'green',
+                    executouOperacao: true,
+                    successOperacao: true,
+                    successText: 'Plano atualizado no banco com sucesso'
+                }, () => {
+                    //console.log('AVISAR O PAI QUE SALVOU')
+                    //console.log(res.data.plano._id)
+                    this.props.avisaPaiQueCadastrouPlanoComSucesso(true); // avisa o pai
+                });
+            }else if(res.data.status === 'error'){
+                this.setState({ 
+                    icone: 'fe fe-x',
+                    animacaoIcone: false,
+                    corDoBackground: 'red',
+                    executouOperacao: true,
+                    errorOperacao: true,
+                    errorText: 'Opa, alguma coisa deu errada...'
+                }, () => {
+                    this.props.avisaPaiQueCadastroDoPlanoDeuErro(true); // avisa o pai
+                });
+            }
+            
+        })
+        .catch(function (error) {
+            //console.log(error);
+        })
+    }
+
     salvarNoServidor = () => {
         api.get(`/empresa/${window.localStorage.getItem('segredo')}/plano/${this.state.idDoPlano}/servidor/${this.state.servidor._id}`)
         .then(res => {
@@ -105,6 +155,8 @@ export default class FeedbackPlano extends Component {
                     executouOperacao: true,
                     successOperacao: true,
                     successText: 'Plano escrito no servidor com sucesso'
+                }, () => {
+                    console.log(res.data)
                 });
             }else if(res.data.status === 'error'){
                 this.setState({ 
@@ -114,6 +166,42 @@ export default class FeedbackPlano extends Component {
                     executouOperacao: true,
                     errorOperacao: true,
                     errorText: 'Opa, alguma coisa deu errada...'
+                }, () => {
+                    console.log(res.data)
+                });
+            }
+            
+        })
+        .catch(function (error) {
+            //console.log(error);
+        })
+    }
+
+    editarNoServidor = () => {
+        api.put(`/empresa/${window.localStorage.getItem('segredo')}/plano/${this.state.idDoPlano}`,)
+        .then(res => {
+            //console.log(res.data)
+            if(res.data.status === 'success'){
+                this.setState({ 
+                    icone: 'fe-check',
+                    animacaoIcone: false,
+                    corDoBackground: 'green',
+                    executouOperacao: true,
+                    successOperacao: true,
+                    successText: 'Plano escrito no servidor com sucesso'
+                }, () => {
+                    console.log(res.data)
+                });
+            }else if(res.data.status === 'error'){
+                this.setState({ 
+                    icone: 'fe fe-x',
+                    animacaoIcone: false,
+                    corDoBackground: 'red',
+                    executouOperacao: true,
+                    errorOperacao: true,
+                    errorText: 'Opa, alguma coisa deu errada...'
+                }, () => {
+                    console.log(res.data)
                 });
             }
             
@@ -151,10 +239,24 @@ export default class FeedbackPlano extends Component {
             return(
                 <h4 className="m-0"><small>Cadastrando plano </small> {this.state.plano.nome} <small> no sistema </small></h4>
             )
+        }else if(this.props.categoria === 'EditarPlano'){
+            return(
+                <h4 className="m-0"><small>Atualizando plano </small> {this.state.plano.nome} <small> no sistema </small></h4>
+            )
         }else if(this.props.categoria === 'SalvarNoServidor'){
             return(
                 <h4 className="m-0"><small>Escrevendo plano no servidor </small> {this.state.servidor.nome} </h4>
             )
+        }else if(this.props.categoria === 'EditarNoServidor'){
+            if(this.state.servidor.ativo){
+                return(
+                    <h4 className="m-0"><small>Escrevendo plano no servidor </small> {this.state.servidor.nome} </h4>
+                )
+            }else{
+                return(
+                    <h4 className="m-0"><small>Apagando plano no servidor </small> {this.state.servidor.nome} </h4>
+                )
+            }
         }
     }
 

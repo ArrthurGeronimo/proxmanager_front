@@ -2,8 +2,8 @@ import React, { Component } from 'react';
 import { Popup, Modal } from 'semantic-ui-react';
 import { priceMask } from './../../../../../../services/masks';
 import './style.css';
-import api from './../../../../../../services/api';
 import ModalDelete from './../ModalDelete';
+import CardProgresso from './../CardProgressoFeedback';
 
 export default class ModalEditServidores extends Component {
   constructor(props) {
@@ -40,10 +40,24 @@ handleChange = name => event => {
       this.setState({ [name]: event.target.value });
   }
 };
+// HandleChange : CHECKBOX's
+toggleChange = name => event => {
+  this.setState({
+    [name]: event.target.checked,
+  }, () => {
+    //console.log(this.state)
+  });
+}
+// Pegando Mensagem do Filho
+VerificaSeCadastrouPlanoComSucesso = (value) => {
+  if(value){
+    this.setState({ renderFeedbackPlanoCadastradoComSucesso: true });
+  }
+}
 // Lifecycle do Componente
 componentDidMount() {
   this.setState({ isMounted: true }, () => {
-    console.log(this.props.plano)
+    //console.log(this.props.plano)
     this.setState({ 
       ...this.state,
       idDoPlano: this.props.plano._id,
@@ -51,7 +65,10 @@ componentDidMount() {
       slug: this.props.plano.slug,
       preco: this.props.plano.preco,
       download: this.props.plano.download,
-      upload: this.props.plano.upload
+      upload: this.props.plano.upload,
+      servidores: this.props.plano.servidor
+    }, () => {
+      //console.log(this.state.servidores)
     });
   });
 }
@@ -68,26 +85,56 @@ PegandoMensagemDoComponenteFilho = (value) => {
 // Editar Servidor
 editarPlano = () =>  {
   const obj = {
-    nome: this.state.nomeDoServidor,
-    ip: this.state.ipDoServidor,
-    porta: this.state.porta,
-    interface: this.state.interface,
-    login: this.state.login,
-    senha: this.state.senha
+    _id: this.state.idDoPlano,
+    nome: this.state.nomeDoPlano,
+    slug: this.state.slug,
+    download: this.state.download,
+    upload: this.state.upload,
+    preco: this.state.preco,
+    tipoDeAutenticacao:{
+        pppoe: true
+    },
+    servidor: this.state.servidoresSelecionados
   };
-  if (obj.ip === '') {
-      console.log('Falta IP');
-  }else{
-      api.put(`/empresa/${window.localStorage.getItem('segredo')}/servidor/${this.props.servidor._id}`, obj)
-      .then(res => {
-        this.setState({ open: false });
-        this.props.mandaDadosParaComponentePai(true); // avisa o pai
-    })
-    .catch(function (error) {
-        console.log(error);
-    })
-  }
+  this.setState({
+      plano: obj,
+      renderFeedbackPlano: true
+  })
 };
+
+// Render Container
+renderContainerFeedbackEditaPlano = () => {
+  if(this.state.renderFeedbackPlano){
+      //console.log('Feedback! Cadastrar Plano');
+      return(
+          <div>
+              <h1 className="page-title">Sicronização do Plano</h1>
+
+              <CardProgresso 
+                  icone='fe-refresh-cw' 
+                  animacaoIcone={true} 
+                  categoria='EditarPlano'
+                  elemento={this.state.plano}
+                  avisaPaiQueCadastrouPlanoComSucesso={this.VerificaSeCadastrouPlanoComSucesso.bind(this)}
+                  avisaPaiQueCadastroDoPlanoDeuErro={this.VerificaSeCadastroDoPlanoDeuErro}
+              />
+
+              {/* VERIFICA SE O PLANO EXISTE 
+
+              {this.state.servidoresSelecionados.map((element, i) => 
+                  this.renderCardCadastroServidor(element, i)
+              )}
+              */}
+
+          </div>
+      )
+  }else{
+      return(
+          <div>
+          </div>
+      )
+  }
+}
 
 renderContainerFeedbackCadastraServidores = () => {
   if(this.state.sicronizacaoEmAndamento){
@@ -110,6 +157,91 @@ renderContainerFeedbackCadastraServidores = () => {
       }
   }
 }
+// RENDER card de progresso do salvamento do servidor
+renderCardCadastroServidor = (element, index) => {
+  return (
+      <CardProgresso 
+          key={index}
+          icone='fe-refresh-cw' 
+          animacaoIcone={true} 
+          categoria='EditarNoServidor'
+          elemento={element}
+          idDoPlano={this.state.idDoPlanoCriado}
+      />
+  )
+}
+// MONTA ARRAY dos servidores
+arrumarServidores = () =>{
+  //console.log('Arruma Array');
+  this.props.listaServidores.map((elemento1, i) => 
+    this.state.servidores.map((elemento2) =>  
+      elemento1.nome === elemento2.nome ? 
+        this.state[`servidor${i}`] === true || this.state[`servidor${i}`] === undefined ? (
+      // Foi MARCADO
+          setTimeout(() => {
+            let json = JSON.stringify({ _id: elemento2._id, nome: elemento2.nome, ativo: elemento2.ativo, sincronizado: elemento2.sincronizado });
+            let jsonServidores = JSON.parse(json);
+            this.setState({
+                servidoresSelecionados: [...this.state.servidoresSelecionados, jsonServidores]
+            });
+          }, 100)
+        )  : (
+        // NÃO Foi Desmarcado
+        setTimeout(() => {
+          let json = JSON.stringify({ _id: elemento2._id, nome: elemento2.nome, ativo: false, sincronizado: elemento2.sincronizado });
+          let jsonServidores = JSON.parse(json);
+          this.setState({
+              servidoresSelecionados: [...this.state.servidoresSelecionados, jsonServidores]
+          });
+        }, 100)
+      ) : (
+      // NÃO ACHOU
+        this.state[`servidor${i}`] ?  (
+          // Foi MARCADO
+          setTimeout(() => {
+            let json = JSON.stringify({ _id: elemento1._id, nome: elemento1.nome, ativo: true, sincronizado: false });
+            let jsonServidores = JSON.parse(json);
+            this.setState({
+                servidoresSelecionados: [...this.state.servidoresSelecionados, jsonServidores]
+            });
+          }, 100)
+        ) : (
+          // NÃO Foi MARCADO
+          setTimeout(() => {
+            let variavelQualquer = 'Não Achou : Não Foi Marcado';
+          }, 100)
+        )
+      )
+    )
+  )
+  
+  setTimeout(() => {
+    this.setState({
+      sicronizacaoEmAndamento: true
+    }, () => {
+      this.editarPlano();
+    })
+  }, 1000)
+
+
+/*
+  for (let i = 0; i < this.state.servidores.length; i++){
+      if(this.state[`servidor${i}`] === true){
+          var json = JSON.stringify({ _id: this.state.servidores[i]._id, nome: this.state.servidores[i].nome });
+          let jsonServidores = JSON.parse(json);
+          setTimeout(() => {
+              this.setState({
+                  servidoresSelecionados: [...this.state.servidoresSelecionados, jsonServidores],
+                  sicronizacaoEmAndamento: true
+              }, () => {
+                  //this.adicionarPlano();
+              });
+          }, 1000);
+      }
+  }
+*/
+}
+
 
   render() {
     return (
@@ -233,16 +365,39 @@ renderContainerFeedbackCadastraServidores = () => {
                       <div className="form-label">Selecione os servidores para cadastrar o plano</div>
                       <div className="custom-controls-stacked">
 
-                          {this.state.servidores.map((elemento, i) => 
-                              <label className="custom-control custom-checkbox" key={i}>
+                          {this.props.listaServidores.map((elemento1, i) => 
+                            this.state.servidores.map((elemento2, j) =>  
+                              elemento1.nome === elemento2.nome ?
+                                <label className="custom-control custom-checkbox" key={i}>
+                                    <input 
+                                        type="checkbox" 
+                                        className="custom-control-input"
+                                        defaultChecked={elemento2.ativo ? true : false}
+                                        onChange={this.toggleChange(`servidor${i}`)} />
+                                    <span className="custom-control-label">{elemento2.nome}</span>
+                                </label>
+                              :
+                                <label className="custom-control custom-checkbox" key={i}>
+                                      <input 
+                                          type="checkbox" 
+                                          className="custom-control-input"
+                                          defaultChecked={false}
+                                          onChange={this.toggleChange(`servidor${i}`)} />
+                                      <span className="custom-control-label">{elemento1.nome}</span>
+                                </label>
+                            )
+                          )}
+
+                          {/* 
+                            <label className="custom-control custom-checkbox" key={i}>
                                   <input 
                                       type="checkbox" 
                                       className="custom-control-input"
                                       defaultChecked={false}
                                       onChange={this.toggleChange(`servidor${i}`)} />
-                                  <span className="custom-control-label">{elemento.nome}</span>
-                              </label>
-                          )}
+                                  <span className="custom-control-label">{elemento1.nome}</span>
+                            </label>
+                          */}
 
                       </div>
                   </div>
@@ -251,7 +406,8 @@ renderContainerFeedbackCadastraServidores = () => {
                 <div className="col-sm-12 col-lg-6">
                     <div className="containerFeedbackPlano">
                         
-                        {this.renderContainerFeedbackCadastraServidores()}
+                      {this.renderContainerFeedbackEditaPlano()}
+                      {this.renderContainerFeedbackCadastraServidores()}
                         
                     </div>
                 </div>
@@ -262,7 +418,7 @@ renderContainerFeedbackCadastraServidores = () => {
             <ModalDelete idDoServidor={this.state.idDoServidor} mandaDadosParaComponentePai={this.PegandoMensagemDoComponenteFilho} />
             <button className="btn btn-secondary" onClick={this.close}>Cancelar</button>
 
-            <button className="btn btn-green" onClick={this.editarPlano} style={{marginLeft: "20px"}}>Atualizar</button>
+            <button className="btn btn-green" onClick={this.arrumarServidores} style={{marginLeft: "20px"}}>Atualizar</button>
             
           </Modal.Actions>
         </Modal>
